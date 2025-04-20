@@ -173,7 +173,7 @@ nav button {
 
 .title h3 {
     grid-column: 2 / 3;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .edit-button {
@@ -205,13 +205,13 @@ nav button {
 }
 
 .due-date {
-    background-color: rgba(114, 78, 150, 0.751);
+    background-color: rgb(114, 78, 150);
     color: white;
     text-shadow: 0.5px 0.5px 0.5px black;
 }
 
 .priority {
-    background-color: rgba(78, 150, 104, 0.751);
+    background-color: rgb(78, 150, 104);
     color: white;
     text-shadow: 0.5px 0.5px 0.5px black;
 }
