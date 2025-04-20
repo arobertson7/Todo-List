@@ -100,6 +100,7 @@ nav button {
     color: white;
     border-radius: 10px;
     border: none;
+    box-shadow: 2px 2px 3px 0.3px rgba(0, 0, 0, 0.353);
 
     /* fade in on page load */
     transition: opacity 1s ease-in;
@@ -133,6 +134,25 @@ nav button {
     width: 90%;
     text-align: center;
     border-bottom: 2px solid black;
+}
+
+.list-options {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.list-options button {
+    width: 32%;
+    border-radius: 20px;
+    background-color: rgb(25, 97, 199);
+    color: white;
+    border: none;
+    font-size: 0.6rem;
+    padding: 5px;
+    box-shadow: 2px 2px 3px 0.3px rgba(0, 0, 0, 0.353);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.638);
 }
 
 .list {
@@ -205,19 +225,7 @@ nav button {
     font-size: 0.6rem;
     font-weight: 600;
     padding: 2px;
-
-}
-
-.due-date {
-    background-color: rgb(114, 78, 150);
-    color: white;
-    text-shadow: 0.5px 0.5px 0.5px black;
-}
-
-.priority {
-    background-color: rgb(78, 150, 104);
-    color: white;
-    text-shadow: 0.5px 0.5px 0.5px black;
+    border: 1.5px solid rgba(0, 0, 0, 0.416);
 }
 
 .todo p {
