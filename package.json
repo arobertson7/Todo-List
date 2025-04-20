@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "css-loader": "^7.1.2",
+    "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "style-loader": "^4.0.0",
     "webpack": "^5.99.5",
@@ -10,6 +11,9 @@
   },
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "sync-from-main": "git checkout gh-pages && git merge main --no-edit",
+    "deploy": "npm run sync-from-main && npm run build && git add dist -f && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages",
+    "postdeploy": "git checkout main"
   }
 }
