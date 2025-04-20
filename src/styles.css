@@ -139,17 +139,17 @@ nav button {
 .list-options {
     width: 90%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     gap: 20px;
 }
 
 .list-options button {
-    width: 32%;
+    width: 35%;
     border-radius: 20px;
     background-color: rgb(25, 97, 199);
     color: white;
     border: none;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 5px;
     box-shadow: 2px 2px 3px 0.3px rgba(0, 0, 0, 0.353);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.638);
