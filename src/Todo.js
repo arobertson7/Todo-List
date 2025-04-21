@@ -5,7 +5,7 @@ class Todo {
     priority; // int (1 - high | 2 - medium | 3 - low)
     completed; // bool
 
-    constructor(title, description, dueDate, priority) {
+    constructor(title, description = "", dueDate = "No due date", priority = 3) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;

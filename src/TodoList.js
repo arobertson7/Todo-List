@@ -2,13 +2,12 @@
 
 class TodoList {
     title // string
-    description; // string
+    // description; // string
     list = []; // array of Todo objects
     finalDueDate; // ? for now a string
 
-    constructor(title, description) {
+    constructor(title) {
         this.title = title;
-        this.description = description;
     }
 
     // getters and setters
@@ -20,13 +19,13 @@ class TodoList {
         this.title = title;
     }
 
-    get description() {
-        return this.description;
-    }
+    // get description() {
+    //     return this.description;
+    // }
 
-    set description(description) {
-        this.description = description;
-    }
+    // set description(description) {
+    //     this.description = description;
+    // }
 
     get list() {
         return this.list;
@@ -37,11 +36,13 @@ class TodoList {
     }
 
     // methods
-    addTodo(Todo) {
+    // add a new todo
+    add(Todo) {
         this.list.push(Todo);
     }
 
-    removeTodo(Todo) {
+    // remove a todo
+    remove(Todo) {
         let index = 0;
         while (index < this.list.length && this.list[i].title != Todo.title) {
             index++;
@@ -59,7 +60,7 @@ class TodoList {
 
     // returns the number of tasks in the list
     size() {
-        return this.list.length();
+        return this.list.length;
     }
 
     // returns the number of completed tasks in the list

@@ -77,7 +77,7 @@ header {
     justify-content: center;
     gap: 5px;
     font-size: 0.7rem;
-    background-color: rgba(255, 255, 255, 0.885);
+    background-color: rgba(255, 255, 255, 0.78);
     box-shadow: 1.5px 1.5px 5px 2px rgba(0, 0, 0, 0.372);
 }
 
@@ -106,7 +106,7 @@ nav button {
     transition: opacity 1s ease-in;
 }
 
-.content {
+#content {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -128,7 +128,7 @@ nav button {
     gap: 20px;
 }
 
-.list-container h2 {
+.list-container > h2 {
     font-size: 1.5rem;
     font-weight: 800;
     width: 90%;
@@ -176,7 +176,7 @@ nav button {
     row-gap: 20px;
 }
 
-.task-header {
+.todo-header {
     grid-column: 1 / 4;
     grid-row: 1;
     display: flex;
@@ -184,16 +184,17 @@ nav button {
     gap: 10px;
 }
 
-.title {
+.todo-title {
     width: 100%;
     height: 90%;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
 }
 
-.title h3 {
+.todo-title h3 {
     grid-column: 2 / 3;
     font-size: 1.2rem;
+    text-align: center;
 }
 
 .edit-button {
@@ -247,4 +248,14 @@ nav button {
     grid-column: 2;
     grid-row: 3;
     font-size: 0.7rem;
+}
+
+/* container for message when there are no taks */
+.empty-list-message {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
