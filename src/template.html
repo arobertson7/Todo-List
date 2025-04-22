@@ -88,5 +88,44 @@
             </div>
         </div> -->
     </div>
+
+    <dialog id="add-new-task-dialog" >
+        <form action="" class="add-new-task-form">
+            <h2>New Task</h2>
+            <div class="task-info">
+                <div class="new-title-form-container">
+                    <label for="new-task-title">Title:</label>
+                    <input type="text" id="new-task-title" name="title" required>
+                </div>
+                <div class="new-description-form-container">
+                    <label for="new-task-description">Description:</label>
+                    <input type="text" id="new-task-description" name="description">
+                </div>
+                <div class="new-due-date-form-container">
+                    <!-- change type later -->
+                     <label for="new-task-due-date">Due Date:</label>
+                     <input type="text" id="new-task-due-date" name="due-date">
+                </div>
+                <div class="new-priority-form-container">
+                    <fieldset>
+                        <legend>Priority:</legend>
+                        <div class="priority-option-buttons">
+                            <div>
+                                <button type="button"><input type="radio" id="high-priority" name="priority" value="high" required checked><label for="high-priority">High</label></button>
+                            </div>
+                            <div>
+                                <button type="button"><input type="radio" id="medium-priority" name="priority" value="medium"><label for="medium-priority">Medium</label></button>
+                            </div>
+                            <div>
+                                <button type="button"><input type="radio" id="low-priority" name="priority" value="low"><label for="low-priority">Low</label></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <button class="submit-new-task-form-button">Add</button>
+        </form>
+    </dialog>
+    <div class="modal-overlay" style="visibility: hidden;"></div>
 </body>
 </html>

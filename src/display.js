@@ -1,4 +1,5 @@
 const display = (function() {
+    
     const headerStartup = function() {
         const header = document.getElementById("header");
         const message = document.createElement("h1");
