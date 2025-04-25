@@ -1,3 +1,5 @@
+import Todo from "./Todo.js";
+
 const display = (function() {
     
     const headerStartup = function() {
@@ -54,6 +56,31 @@ const display = (function() {
         const addTaskButton = document.createElement("button");
         addTaskButton.classList.add("add-task-button");
         addTaskButton.textContent = "Add New Task";
+
+        // event listeners for addNewTask button
+        addTaskButton.addEventListener("click", () => {
+            const dialog = document.getElementById("add-new-task-dialog");
+            dialog.showModal();
+            const title = document.getElementById("new-task-title");
+            title.focus();
+        
+            const overlay = document.querySelector(".modal-overlay");
+            overlay.style.visibility = "visible";
+        
+            const listContainer = document.querySelector(".list-container");
+            listContainer.style.visibility = "hidden";
+
+            const closeDialogButton = document.querySelector(".close-dialog-button");
+            closeDialogButton.addEventListener("click", () => {
+                dialog.close();
+                overlay.style.visibility = "hidden";
+                listContainer.style.visibility = "visible";
+            })
+
+            const submitButton = document.querySelector(".submit-new-task-form-button");
+            submitButton.addEventListener("click", handleAddedTask.bind(thisList));
+        })
+
         const sortTasksButton = document.createElement("button");
         sortTasksButton.classList.add("sort-tasks-button");
         sortTasksButton.textContent = "Sort By";
@@ -88,6 +115,46 @@ const display = (function() {
     const generateTodoCard = function(thisTodo) {
         const todo = document.createElement("div");
         todo.classList.add("todo");
+
+        const editButton = document.createElement("button");
+        editButton.classList.add("edit-button");
+        editButton.textContent = "edit";
+        // event listeners for Edit button
+        editButton.addEventListener("click", () => {
+            const dialog = document.getElementById("edit-task-dialog");
+            dialog.showModal();
+        
+            const overlay = document.querySelector(".modal-overlay");
+            overlay.style.visibility = "visible";
+        
+            const listContainer = document.querySelector(".list-container");
+            listContainer.style.visibility = "hidden";
+
+            // fill current values into the form
+            const titleField = document.getElementById("edited-task-title");
+            titleField.value = thisTodo.title;
+            const descriptionField = document.getElementById("edited-task-description");
+            descriptionField.value = thisTodo.description;
+            const dueDateField = document.getElementById("edited-task-due-date");
+            dueDateField.value = thisTodo.dueDate;
+            const priorityField = document.querySelector(`input[name="edited-priority"][value="${thisTodo.priority}"]`);
+            // the below causes multiple radio buttons to be checked
+            // priorityField.setAttribute('checked', 'checked');
+
+            const closeDialogButton = document.querySelector(".close-edit-dialog-button");
+            closeDialogButton.addEventListener("click", () => {
+                // reset form and close modal
+                const editsForm = document.querySelector(".edit-task-form");
+                editsForm.reset();
+                dialog.close();
+                overlay.style.visibility = "hidden";
+                listContainer.style.visibility = "visible";
+            })
+
+            const submitEditsButton = document.querySelector(".submit-edited-task-form-button");
+            submitEditsButton.addEventListener("click", handleEditedTask);
+        })
+        todo.appendChild(editButton);
     
         const todoHeader = document.createElement("div");
         todoHeader.classList.add("todo-header");
@@ -99,10 +166,6 @@ const display = (function() {
         const title = document.createElement("h3");
         title.textContent = thisTodo.title;
         todoTitle.appendChild(title);
-        const editButton = document.createElement("button");
-        editButton.classList.add("edit-button");
-        editButton.textContent = "edit";
-        todoTitle.appendChild(editButton);
     
         const details = document.createElement("div");
         details.classList.add("details");
@@ -143,6 +206,49 @@ const display = (function() {
         todo.appendChild(completedButton);
         
         return todo;
+    }
+
+    const clearContent = function() {
+        const content = document.getElementById("content");
+        for (let i = content.childNodes.length - 1; i >= 0; i--) {
+            content.removeChild(content.childNodes[i]);
+        }
+    }
+
+    // Here, this = thisList, via handleAddedTask.bind(thisList)
+    const handleAddedTask = function(event) {
+        event.preventDefault();
+
+        // retrieve info
+        const newTitle = document.getElementById("new-task-title").value;
+        const newDescription = document.getElementById("new-task-description").value;
+        const newDueDate = document.getElementById("new-task-due-date").value;
+        const newPriority = document.querySelector('input[name="priority"]:checked').value;
+      
+        // create new Todo object and add to List
+        const newTodo = new Todo(newTitle, newDescription, newDueDate, newPriority);
+        this.add(newTodo); // "this" references "thisList"
+        
+        // add to list display
+        const listDisplay = document.querySelector(".list");
+        const newTodoCard = generateTodoCard(newTodo);
+        listDisplay.appendChild(newTodoCard);
+
+        // close dialog and reset form
+        const form = document.querySelector(".add-new-task-form");
+        form.reset();
+        const dialog = document.getElementById("add-new-task-dialog");
+        dialog.close();
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "hidden";
+        const listContainer = document.querySelector(".list-container");
+        listContainer.style.visibility = "visible";
+    }
+
+    const handleEditedTask = function(event) {
+        event.preventDefault();
+
+
     }
 
     return {headerStartup, displayList};

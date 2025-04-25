@@ -167,6 +167,7 @@ nav button {
 }
 
 .todo {
+    position: relative;
     height: 250px;
     padding: 0px 5px 5px 5px;
     background-color: white;
@@ -202,19 +203,17 @@ nav button {
 }
 
 .edit-button {
-    width: 70%;
-    height: 80%;
-    position: relative;
-    left: 20px;
+    width: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     padding: 5px;
     grid-column: 3;
     border-radius: 20px;
-    justify-self: end;
-    align-self: center;
 }
 
 .details {
@@ -264,7 +263,7 @@ nav button {
     text-align: center;
 }
 
-dialog {
+#add-new-task-dialog, #edit-task-dialog {
     position: fixed;
     z-index: 200;
     width: 80%;
@@ -285,7 +284,7 @@ dialog {
     background-color: rgba(0, 0, 0, 0.29);
 }
 
-dialog form {
+#add-new-task-dialog form, #edit-task-dialog form {
     width: 100%;
     height: 100%;
     padding-bottom: 40px;
@@ -295,7 +294,19 @@ dialog form {
     justify-content: space-between;
 }
 
-.task-info {
+.close-dialog-button, .close-edit-dialog-button {
+    position: absolute;
+    right: 20px;
+    width: 8%;
+    height: auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+}
+
+.task-info, .edited-task-info {
     width: 100%;
     height: 80%;
     display: flex;
@@ -304,26 +315,26 @@ dialog form {
     gap: 30px;
 }
 
-.task-info > div {
+.task-info > div, .edited-task-info > div {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.task-info > div > label, dialog form legend {
+.task-info > div > label, #add-new-task-dialog form legend, .edited-task-info > div > label, #edit-task-dialog form legend {
     font-weight: 550;
     position: relative;
     left: 5px;
 }
 
-.new-priority-form-container fieldset {
+.new-priority-form-container fieldset, .edited-priority-form-container fieldset {
     padding: 0px;
     border: none;
     display: flex;
     flex-direction: column;
 }
 
-.priority-option-buttons {
+.priority-option-buttons, .edited-priority-option-buttons {
     position: relative;
     left: 5px;
     margin-top: 10px;
@@ -331,11 +342,11 @@ dialog form {
     gap: 20px;
 }
 
-.priority-option-buttons input {
+.priority-option-buttons input, .edited-priority-option-buttons input {
     appearance: none;
 }
 
-.submit-new-task-form-button {
+.submit-new-task-form-button, .submit-edited-task-form-button {
     width: 50%;
     height: 40px;
     background: linear-gradient(to bottom right, white, 0.5%, rgb(25, 97, 199));

@@ -18,34 +18,5 @@ defaultList.add(eat);
 
 display.displayList(defaultList);
 
+// display.clearListDisplay();
 
-
-// remove everything below after finishing dialog box
-
-const ok = function() {
-    const dialog = document.getElementById("add-new-task-dialog");
-    dialog.showModal();
-
-    const overlay = document.querySelector(".modal-overlay");
-    overlay.style.visibility = "visible";
-
-    const listContainer = document.querySelector(".list-container");
-    listContainer.style.visibility = "hidden";
-}
-
-
-const addTaskButton = document.querySelector(".add-task-button");
-addTaskButton.addEventListener("click", () => {
-    ok();
-})
-const highPriority = document.getElementById("high-priority");
-highPriority.addEventListener("click", () => {
-    const dialog = document.getElementById("add-new-task-dialog");
-    dialog.close();
-
-    const overlay = document.querySelector(".modal-overlay");
-    overlay.style.visibility = "hidden";
-
-    const listContainer = document.querySelector(".list-container");
-    listContainer.style.visibility = "visible";
-})
