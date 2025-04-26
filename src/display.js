@@ -171,6 +171,30 @@ const display = (function() {
                 newSubmitButton.textContent = "Add";
                 form.appendChild(newSubmitButton);
             })
+
+            // make sure no filled in priority buttons if there wasn't previous input
+            const titleField = document.getElementById("new-task-title").value;
+            const descriptionField = document.getElementById("new-task-description").value;
+            const dueDateField = document.getElementById("new-task-due-date").value;
+            if (titleField == "" && descriptionField == "" && dueDateField == "") {
+                const priorityButtons = document.querySelectorAll(".styled-priority-button");
+                // briefly remove class here to avoid transition on load
+                for (let i = 0; i < priorityButtons.length; i++) {
+                    priorityButtons[i].classList.remove("color-transition");
+                }
+                priorityButtons[0].style.backgroundColor = "white";
+                priorityButtons[0].childNodes[1].style.color = "var(--high-priority-color)";
+                priorityButtons[1].style.backgroundColor = "white";
+                priorityButtons[1].childNodes[1].style.color = "var(--medium-priority-color)";
+                priorityButtons[2].style.backgroundColor = "white";
+                priorityButtons[2].childNodes[1].style.color = "var(--low-priority-color)";
+                // add class back
+                setTimeout(() => {
+                    for (let i = 0; i < priorityButtons.length; i++) {
+                        priorityButtons[i].classList.add("color-transition");
+                    }
+                }, 700);
+            }
         })
     
         const list = document.createElement("div");
