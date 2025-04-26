@@ -1,7 +1,8 @@
 import Todo from "./Todo.js";
+import TodoList from "./TodoList.js";
+import { myLists } from "./index.js";
 
 const display = (function() {
-    // activeList;
     
     const headerStartup = function() {
         const header = document.getElementById("header");
@@ -27,6 +28,7 @@ const display = (function() {
             }
     
             nav.childNodes[2].textContent = "My Lists";
+            nav.childNodes[2].addEventListener("click", displayMyLists);
     
             header.removeChild(message);
             header.appendChild(nav);
@@ -42,6 +44,22 @@ const display = (function() {
     }
     
     const displayList = function(thisList) {
+        // add more pics for diff backgrounds on diff lists
+        // const background = document.querySelector(".background");
+        // switch(true) {
+        //     case thisList == myLists[0]:
+        //         background.style.background = "url('./berlin.jpg')";
+        //         break;
+        //     case thisList == myLists[1]:
+        //         background.style.background = 'url("./nyc.jpg")';
+        //         break;
+        //     case thisList == myLists[2]:
+        //         background.style.background = 'url("./dresden.jpg")';
+        //         break;
+        // }
+
+
+        clearContent();
         const content = document.getElementById("content");
     
         const listContainer = document.createElement("div");
@@ -292,6 +310,94 @@ const display = (function() {
         newSubmitEditsButton.classList.add("submit-edited-task-form-button");
         newSubmitEditsButton.textContent = "Save";
         editsForm.appendChild(newSubmitEditsButton);
+    }
+
+    const displayMyLists = function() {
+        clearContent();
+
+        const content = document.getElementById("content");
+        const myListsContainer = document.createElement("div");
+        myListsContainer.classList.add("my-lists-container");
+        content.appendChild(myListsContainer);
+        const myListsHeader = document.createElement("h2");
+        myListsHeader.textContent = "My Lists";
+        myListsContainer.appendChild(myListsHeader);
+
+        // options buttons
+        const myListOptions = document.createElement("div");
+        myListOptions.classList.add("my-list-options");
+        const newListButton = document.createElement("button");
+        newListButton.classList.add("new-list-button");
+        newListButton.textContent = "New List";
+        myListOptions.appendChild(newListButton);
+        newListButton.addEventListener("click", () => {
+            const dialog = document.getElementById("add-new-list-dialog");
+            dialog.showModal();
+            const title = document.getElementById("new-list-title");
+            title.focus();
+        
+            const overlay = document.querySelector(".modal-overlay");
+            overlay.style.visibility = "visible";
+
+            content.style.visibility = "hidden";
+
+            const closeDialogButton = document.querySelector(".close-new-list-dialog-button");
+            closeDialogButton.addEventListener("click", () => {
+                dialog.close();
+                overlay.style.visibility = "hidden";
+                content.style.visibility = "visible";
+            })
+
+            const submitButton = document.querySelector(".submit-new-list-button");
+            submitButton.addEventListener("click", handleCreateNewList);
+        });
+
+        myListsContainer.appendChild(myListOptions);
+
+        // lists
+        const listCollection = document.createElement("div");
+        listCollection.classList.add("my-lists");
+        myListsContainer.appendChild(listCollection);
+
+        for (let i = 0; i < myLists.length; i++) {
+            const curList = myLists[i];
+
+            const listCard = document.createElement("div");
+            listCard.classList.add("list-card");
+            const listTitle = document.createElement("h3");
+            listTitle.classList.add("list-card-title");
+            listTitle.textContent = curList.title;
+            listCard.appendChild(listTitle);
+            const progress = document.createElement("p");
+            progress.classList.add("list-progress");
+            progress.textContent = `${curList.getCompleted()} / ${curList.size()} tasks completed`;
+            listCard.appendChild(progress);
+            listCollection.appendChild(listCard);
+
+            listCard.addEventListener("click", () => {
+                displayList(myLists[i]);
+            })
+        }
+    }
+
+    const handleCreateNewList = function(event) {
+        event.preventDefault();
+
+        const newListTitle = document.getElementById("new-list-title").value;
+        const newList = new TodoList(newListTitle);
+        myLists.push(newList);
+
+        // reset form, close modal, and refresh myLists page
+        const form = document.querySelector(".add-new-list-form");
+        form.reset();
+        const dialog = document.getElementById("add-new-list-dialog");
+        dialog.close();
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "hidden";
+        const content = document.getElementById("content");
+        content.style.visibility = "visible";
+        clearContent();
+        displayMyLists();
     }
 
     return {headerStartup, displayList};
