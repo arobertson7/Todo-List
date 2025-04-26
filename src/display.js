@@ -1,6 +1,7 @@
 import Todo from "./Todo.js";
 
 const display = (function() {
+    // activeList;
     
     const headerStartup = function() {
         const header = document.getElementById("header");
@@ -66,7 +67,7 @@ const display = (function() {
         
             const overlay = document.querySelector(".modal-overlay");
             overlay.style.visibility = "visible";
-        
+
             const listContainer = document.querySelector(".list-container");
             listContainer.style.visibility = "hidden";
 
@@ -104,7 +105,7 @@ const display = (function() {
         else {
             for (let i = 0; i < thisList.size(); i++) {
                 // create and append task
-                const todoCard = generateTodoCard(thisList.list[i]);
+                const todoCard = generateTodoCard(thisList, i);
                 list.appendChild(todoCard);
             }
         }
@@ -112,8 +113,10 @@ const display = (function() {
     }
     
     // creates and returns a "card" for the given Todo object
-    const generateTodoCard = function(thisTodo) {
-        const todo = document.createElement("div");
+    const generateTodoCard = function(thisList, taskIndex) {
+        const thisTodo = thisList.list[taskIndex]; // Todo object
+
+        const todo = document.createElement("div"); // Todo card DOM element
         todo.classList.add("todo");
 
         const editButton = document.createElement("button");
@@ -140,19 +143,23 @@ const display = (function() {
             const priorityField = document.querySelector(`input[name="edited-priority"][value="${thisTodo.priority}"]`);
             // the below causes multiple radio buttons to be checked
             // priorityField.setAttribute('checked', 'checked');
+            const editsForm = document.querySelector(".edit-task-form");
+            editsForm.classList.add(`taskIndex${taskIndex}`);
 
             const closeDialogButton = document.querySelector(".close-edit-dialog-button");
             closeDialogButton.addEventListener("click", () => {
                 // reset form and close modal
-                const editsForm = document.querySelector(".edit-task-form");
                 editsForm.reset();
+                editsForm.classList.remove(editsForm.classList[1]);
                 dialog.close();
                 overlay.style.visibility = "hidden";
                 listContainer.style.visibility = "visible";
             })
 
             const submitEditsButton = document.querySelector(".submit-edited-task-form-button");
-            submitEditsButton.addEventListener("click", handleEditedTask);
+            submitEditsButton.addEventListener("click", function(event) {
+                handleEditedTask(thisList, taskIndex, event);
+            })
         })
         todo.appendChild(editButton);
     
@@ -230,9 +237,8 @@ const display = (function() {
         this.add(newTodo); // "this" references "thisList"
         
         // add to list display
-        const listDisplay = document.querySelector(".list");
-        const newTodoCard = generateTodoCard(newTodo);
-        listDisplay.appendChild(newTodoCard);
+        clearContent();
+        displayList(this);
 
         // close dialog and reset form
         const form = document.querySelector(".add-new-task-form");
@@ -243,12 +249,49 @@ const display = (function() {
         overlay.style.visibility = "hidden";
         const listContainer = document.querySelector(".list-container");
         listContainer.style.visibility = "visible";
+
+        // bandaid solution for now to avoid duplicate event listeners, was causing problems
+        const oldSubmitNewTaskButton = document.querySelector(".submit-new-task-form-button");
+        form.removeChild(oldSubmitNewTaskButton);
+        const newSubmitNewTaskButton = document.createElement("button");
+        newSubmitNewTaskButton.classList.add("submit-new-task-form-button");
+        newSubmitNewTaskButton.textContent = "Add";
+        form.appendChild(newSubmitNewTaskButton);
     }
 
-    const handleEditedTask = function(event) {
+    // Here, this = thisList, via handleEditedTask.bind(thisList)
+    const handleEditedTask = function(thisList, taskIndex, event) {
         event.preventDefault();
 
+        // retrieve info
+        const editedTitle = document.getElementById("edited-task-title").value;
+        const editedDescription = document.getElementById("edited-task-description").value;
+        const editedDueDate = document.getElementById("edited-task-due-date").value;
+        const editedPriority = document.querySelector('input[name="edited-priority"]:checked').value;
 
+        // update Todo Object in the List
+        thisList.list[taskIndex].title = editedTitle;
+        thisList.list[taskIndex].description = editedDescription;
+        thisList.list[taskIndex].dueDate = editedDueDate;
+        thisList.list[taskIndex].priority = editedPriority;
+
+        // reset form, close modal, and refresh list
+        const editsForm = document.querySelector(".edit-task-form");
+        editsForm.reset();
+        const dialog = document.getElementById("edit-task-dialog");
+        dialog.close();
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "hidden";
+        clearContent();
+        displayList(thisList);
+
+        // bandaid solution for now to avoid duplicate event listeners, was causing problems
+        const oldSubmitEditsButton = document.querySelector(".submit-edited-task-form-button");
+        editsForm.removeChild(oldSubmitEditsButton);
+        const newSubmitEditsButton = document.createElement("button");
+        newSubmitEditsButton.classList.add("submit-edited-task-form-button");
+        newSubmitEditsButton.textContent = "Save";
+        editsForm.appendChild(newSubmitEditsButton);
     }
 
     return {headerStartup, displayList};

@@ -20,3 +20,7 @@ display.displayList(defaultList);
 
 // display.clearListDisplay();
 
+const header = document.getElementById("header");
+header.addEventListener("click", () => {
+    console.log(defaultList.list);
+})
