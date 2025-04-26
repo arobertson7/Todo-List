@@ -57,6 +57,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* *********************************************************************************************************************************** */
 
+:root {
+    --high-priority-color: rgb(197, 4, 4);
+    --medium-priority-color: rgb(255, 149, 0);
+    --low-priority-color: rgb(4, 203, 115);
+}
+
 .background {
     position: fixed;
     z-index: -1000;
@@ -230,12 +236,12 @@ nav button {
     font-size: 0.6rem;
     font-weight: 600;
     padding: 2px;
-    border: 1.5px solid rebeccapurple;
-    text-shadow: 0.2px 0.2px .1px rgba(0, 0, 0, 0.522);
+    border: 1.5px solid rgb(137, 71, 204);
+    text-shadow: 0.1px 0.1px .1px rgba(0, 0, 0, 0.767);
 }
 
-.details div:nth-child(2) {
-    border: 1.5px solid rgb(43, 164, 92);
+.priority p {
+    text-shadow: 0.1px 0.1px .1px rgba(0, 0, 0, 0.767);
 }
 
 .todo p {
@@ -347,6 +353,38 @@ nav button {
 
 .priority-option-buttons input, .edited-priority-option-buttons input {
     appearance: none;
+    
+}
+
+.priority-option-buttons div:first-child label, .edited-priority-option-buttons div:first-child label {
+    color: var(--high-priority-color);
+}
+
+.priority-option-buttons div:nth-child(2) label, .edited-priority-option-buttons div:nth-child(2) label {
+    color: var(--medium-priority-color);
+}
+
+.priority-option-buttons div:last-child label, .edited-priority-option-buttons div:last-child label {
+    color: var(--low-priority-color);
+}
+
+.color-transition {
+    transition: background-color 0.7s ease;
+}
+
+.priority-option-buttons > div:first-child > button, .edited-priority-option-buttons > div:first-child > button {
+    background-color: white;
+    border: 1.2px solid var(--high-priority-color);
+}
+
+.priority-option-buttons > div:nth-child(2) > button, .edited-priority-option-buttons > div:nth-child(2) > button {
+    background-color: white;
+    border: 1.2px solid var(--medium-priority-color);
+}
+
+.priority-option-buttons > div:last-child > button, .edited-priority-option-buttons > div:last-child > button {
+    background-color: white;
+    border: 1.2px solid var(--low-priority-color);
 }
 
 .submit-new-task-form-button, .submit-edited-task-form-button, .submit-new-list-button {

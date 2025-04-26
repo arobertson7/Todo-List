@@ -41,6 +41,63 @@ const display = (function() {
                 nav.childNodes[j].style.opacity = "1";
             }
         }, clock);
+
+        // initialize priority button transition styles
+        initializeDialogButtonTransitionStyles();
+    }
+
+    const initializeDialogButtonTransitionStyles = function() {
+        // style add task priority buttons
+        const addTaskPriorityButtons = document.querySelectorAll(".styled-priority-button");
+        for (let i = 0; i < addTaskPriorityButtons.length; i++) {
+            addTaskPriorityButtons[i].addEventListener("click", () => {
+                const thisPriority = addTaskPriorityButtons[i].classList[1];
+                addTaskPriorityButtons[i].style.backgroundColor = `var(--${thisPriority}-priority-color)`;
+                addTaskPriorityButtons[i].childNodes[1].style.color = "white";
+                for (let j = 0; j < addTaskPriorityButtons.length; j++) {
+                    if (addTaskPriorityButtons[j] != addTaskPriorityButtons[i]) {
+                        if (j == 0) {
+                            addTaskPriorityButtons[j].style.backgroundColor = "white";
+                            addTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                        }
+                        else if (j == 1) {
+                            addTaskPriorityButtons[j].style.backgroundColor = "white";
+                            addTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                        }
+                        else if (j == 2) {
+                            addTaskPriorityButtons[j].style.backgroundColor = "white";
+                            addTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                        }
+                    }
+                }
+            })
+        }
+
+        // style edit task priority buttons
+        const editTaskPriorityButtons = document.querySelectorAll(".styled-edited-priority-button");
+        for (let i = 0; i < editTaskPriorityButtons.length; i++) {
+            editTaskPriorityButtons[i].addEventListener("click", () => {
+                const thisPriority = editTaskPriorityButtons[i].classList[1];
+                editTaskPriorityButtons[i].style.backgroundColor = `var(--${thisPriority}-priority-color)`;
+                editTaskPriorityButtons[i].childNodes[1].style.color = "white";
+                for (let j = 0; j < editTaskPriorityButtons.length; j++) {
+                    if (editTaskPriorityButtons[j] != editTaskPriorityButtons[i]) {
+                        if (j == 0) {
+                            editTaskPriorityButtons[j].style.backgroundColor = "white";
+                            editTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                        }
+                        else if (j == 1) {
+                            editTaskPriorityButtons[j].style.backgroundColor = "white";
+                            editTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                        }
+                        else if (j == 2) {
+                            editTaskPriorityButtons[j].style.backgroundColor = "white";
+                            editTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                        }
+                    }
+                }
+            })
+        }
     }
     
     const displayList = function(thisList) {
@@ -76,6 +133,13 @@ const display = (function() {
         addTaskButton.classList.add("add-task-button");
         addTaskButton.textContent = "Add New Task";
 
+        const sortTasksButton = document.createElement("button");
+        sortTasksButton.classList.add("sort-tasks-button");
+        sortTasksButton.textContent = "Sort By";
+        listOptions.appendChild(addTaskButton);
+        listOptions.appendChild(sortTasksButton);
+        listContainer.appendChild(listOptions);
+
         // event listeners for addNewTask button
         addTaskButton.addEventListener("click", () => {
             const dialog = document.getElementById("add-new-task-dialog");
@@ -89,23 +153,25 @@ const display = (function() {
             const listContainer = document.querySelector(".list-container");
             listContainer.style.visibility = "hidden";
 
+            const submitButton = document.querySelector(".submit-new-task-form-button");
+            submitButton.addEventListener("click", handleAddedTask.bind(thisList));
+
             const closeDialogButton = document.querySelector(".close-dialog-button");
             closeDialogButton.addEventListener("click", () => {
                 dialog.close();
                 overlay.style.visibility = "hidden";
                 listContainer.style.visibility = "visible";
+
+                // bandaid solution for now to avoid multiple event listeners for submit
+                const form = document.querySelector(".add-new-task-form");
+                const oldSubmitButton = document.querySelector(".submit-new-task-form-button");
+                form.removeChild(oldSubmitButton);
+                const newSubmitButton = document.createElement("button");
+                newSubmitButton.classList.add("submit-new-task-form-button");
+                newSubmitButton.textContent = "Add";
+                form.appendChild(newSubmitButton);
             })
-
-            const submitButton = document.querySelector(".submit-new-task-form-button");
-            submitButton.addEventListener("click", handleAddedTask.bind(thisList));
         })
-
-        const sortTasksButton = document.createElement("button");
-        sortTasksButton.classList.add("sort-tasks-button");
-        sortTasksButton.textContent = "Sort By";
-        listOptions.appendChild(addTaskButton);
-        listOptions.appendChild(sortTasksButton);
-        listContainer.appendChild(listOptions);
     
         const list = document.createElement("div");
         list.classList.add("list");
@@ -158,12 +224,44 @@ const display = (function() {
             descriptionField.value = thisTodo.description;
             const dueDateField = document.getElementById("edited-task-due-date");
             dueDateField.value = thisTodo.dueDate;
-            const priorityField = document.querySelector(`input[name="edited-priority"][value="${thisTodo.priority}"]`);
-            // the below causes multiple radio buttons to be checked
-            // priorityField.setAttribute('checked', 'checked');
+            
+            // specific to priority
+            const priorityIndex = thisTodo.priority - 1;
+            const editTaskPriorityButtons = document.querySelectorAll(".styled-edited-priority-button");
+            // briefly remove class here to avoid transition on load
+            for (let i = 0; i < editTaskPriorityButtons.length; i++) {
+                editTaskPriorityButtons[i].classList.remove("color-transition");
+            }
+            const priorityAsString = editTaskPriorityButtons[priorityIndex].classList[1];
+            editTaskPriorityButtons[priorityIndex].style.backgroundColor = `var(--${priorityAsString}-priority-color)`;
+            editTaskPriorityButtons[priorityIndex].childNodes[1].style.color = "white";
+            for (let j = 0; j < editTaskPriorityButtons.length; j++) {
+                if (j != priorityIndex) {
+                    if (j == 0) {
+                        editTaskPriorityButtons[j].style.backgroundColor = "white";
+                        editTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                    }
+                    else if (j == 1) {
+                        editTaskPriorityButtons[j].style.backgroundColor = "white";
+                        editTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                    }
+                    else if (j == 2) {
+                        editTaskPriorityButtons[j].style.backgroundColor = "white";
+                        editTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                    }
+                }
+            }
+            // add class back
+            setTimeout(() => {
+                for (let i = 0; i < editTaskPriorityButtons.length; i++) {
+                    editTaskPriorityButtons[i].classList.add("color-transition");
+                }
+            }, 700);
+
             const editsForm = document.querySelector(".edit-task-form");
             editsForm.classList.add(`taskIndex${taskIndex}`);
 
+            // close dialog button
             const closeDialogButton = document.querySelector(".close-edit-dialog-button");
             closeDialogButton.addEventListener("click", () => {
                 // reset form and close modal
@@ -207,16 +305,21 @@ const display = (function() {
         const priority = document.createElement("div");
         priority.classList.add("priority");
         const priorityNote = document.createElement("p");
-        priorityNote.style.color = "rgb(43, 164, 92)";
         switch(true) {
             case thisTodo.priority == 1:
                 priorityNote.textContent = "High Priority";
+                priority.style.border = "1.5px solid var(--high-priority-color)";
+                priorityNote.style.color = "var(--high-priority-color)";
                 break;
             case thisTodo.priority == 2:
                 priorityNote.textContent = "Medium Priority";
+                priority.style.border = "1.5px solid var(--medium-priority-color)";
+                priorityNote.style.color = "var(--medium-priority-color)";
                 break;
             case thisTodo.priority == 3:
                 priorityNote.textContent = "Low Priority";
+                priority.style.border = "1.5px solid var(--low-priority-color)";
+                priorityNote.style.color = "var(--low-priority-color)";
         }
         priority.appendChild(priorityNote);
         details.appendChild(priority);
