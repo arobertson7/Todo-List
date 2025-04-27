@@ -54,19 +54,23 @@ const display = (function() {
                 const thisPriority = addTaskPriorityButtons[i].classList[1];
                 addTaskPriorityButtons[i].style.backgroundColor = `var(--${thisPriority}-priority-color)`;
                 addTaskPriorityButtons[i].childNodes[1].style.color = "white";
+                addTaskPriorityButtons[i].childNodes[0].setAttribute('checked', 'checked');
                 for (let j = 0; j < addTaskPriorityButtons.length; j++) {
                     if (addTaskPriorityButtons[j] != addTaskPriorityButtons[i]) {
                         if (j == 0) {
                             addTaskPriorityButtons[j].style.backgroundColor = "white";
                             addTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                            addTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                         else if (j == 1) {
                             addTaskPriorityButtons[j].style.backgroundColor = "white";
                             addTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                            addTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                         else if (j == 2) {
                             addTaskPriorityButtons[j].style.backgroundColor = "white";
                             addTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                            addTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                     }
                 }
@@ -80,19 +84,23 @@ const display = (function() {
                 const thisPriority = editTaskPriorityButtons[i].classList[1];
                 editTaskPriorityButtons[i].style.backgroundColor = `var(--${thisPriority}-priority-color)`;
                 editTaskPriorityButtons[i].childNodes[1].style.color = "white";
+                editTaskPriorityButtons[i].childNodes[0].setAttribute('checked', 'checked');
                 for (let j = 0; j < editTaskPriorityButtons.length; j++) {
                     if (editTaskPriorityButtons[j] != editTaskPriorityButtons[i]) {
                         if (j == 0) {
                             editTaskPriorityButtons[j].style.backgroundColor = "white";
                             editTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                         else if (j == 1) {
                             editTaskPriorityButtons[j].style.backgroundColor = "white";
                             editTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                         else if (j == 2) {
                             editTaskPriorityButtons[j].style.backgroundColor = "white";
                             editTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
                         }
                     }
                 }
@@ -285,6 +293,11 @@ const display = (function() {
             const editsForm = document.querySelector(".edit-task-form");
             editsForm.classList.add(`taskIndex${taskIndex}`);
 
+            const submitEditsButton = document.querySelector(".submit-edited-task-form-button");
+            submitEditsButton.addEventListener("click", function(event) {
+                handleEditedTask(thisList, taskIndex, event);
+            })
+
             // close dialog button
             const closeDialogButton = document.querySelector(".close-edit-dialog-button");
             closeDialogButton.addEventListener("click", () => {
@@ -294,11 +307,15 @@ const display = (function() {
                 dialog.close();
                 overlay.style.visibility = "hidden";
                 listContainer.style.visibility = "visible";
-            })
 
-            const submitEditsButton = document.querySelector(".submit-edited-task-form-button");
-            submitEditsButton.addEventListener("click", function(event) {
-                handleEditedTask(thisList, taskIndex, event);
+                // bandaid solution for now to avoid multiple event listeners for submit
+                const form = document.querySelector(".edit-task-form");
+                const oldSubmitButton = document.querySelector(".submit-edited-task-form-button");
+                form.removeChild(oldSubmitButton);
+                const newSubmitButton = document.createElement("button");
+                newSubmitButton.classList.add("submit-edited-task-form-button");
+                newSubmitButton.textContent = "Save";
+                form.appendChild(newSubmitButton);
             })
         })
         todo.appendChild(editButton);
