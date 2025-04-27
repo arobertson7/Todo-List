@@ -16,5 +16,8 @@
     "deploy": "npm run sync-from-main && npm run build && git add dist -f && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages",
     "postdeploy": "git checkout main",
     "code": "code ./src/template.html ./src/styles.css ./src/index.js ./src/display.js ./src/TodoList.js ./src/Todo.js"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }

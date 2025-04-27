@@ -1,6 +1,8 @@
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
 import { myLists } from "./index.js";
+import { format, formatDistanceStrict } from "date-fns";
+import { formatDateFromInput, formatDateForEditTaskDialog, formatDueDateForDisplay } from "./format-date.js";
 
 const display = (function() {
     
@@ -289,7 +291,7 @@ const display = (function() {
             const descriptionField = document.getElementById("edited-task-description");
             descriptionField.value = thisTodo.description;
             const dueDateField = document.getElementById("edited-task-due-date");
-            dueDateField.value = thisTodo.dueDate;
+            dueDateField.value = formatDateForEditTaskDialog(thisTodo.dueDate);
             
             // specific to priority
             const priorityIndex = thisTodo.priority - 1;
@@ -397,7 +399,7 @@ const display = (function() {
         const dueDateNote = document.createElement("p");
         // HANDLE DUE DATE CASES MORE LATER (COLORS AND MESSAGE FORMATTING)
         dueDateNote.style.color = "rebeccapurple";
-        dueDateNote.textContent = thisTodo.dueDate;
+        dueDateNote.textContent = formatDueDateForDisplay(thisTodo.dueDate);
         dueDate.appendChild(dueDateNote);
         details.appendChild(dueDate);
     
@@ -427,7 +429,8 @@ const display = (function() {
         // retrieve info
         const newTitle = document.getElementById("new-task-title").value;
         const newDescription = document.getElementById("new-task-description").value;
-        const newDueDate = document.getElementById("new-task-due-date").value;
+        let newDueDate = document.getElementById("new-task-due-date").value;
+        newDueDate = formatDateFromInput(newDueDate);
         const newPriority = document.querySelector('input[name="priority"]:checked').value;
       
         // create new Todo object and add to List
@@ -470,7 +473,7 @@ const display = (function() {
         // update Todo Object in the List
         thisList.list[taskIndex].title = editedTitle;
         thisList.list[taskIndex].description = editedDescription;
-        thisList.list[taskIndex].dueDate = editedDueDate;
+        thisList.list[taskIndex].dueDate = formatDateFromInput(editedDueDate);
         thisList.list[taskIndex].priority = editedPriority;
 
         // reset form, close modal, and refresh list

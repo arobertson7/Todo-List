@@ -1,11 +1,11 @@
 class Todo {
     title; // string
     description; // string
-    dueDate; // ? for now a string
+    dueDate; // string in format:  2025-6-16 / yyyy-M-d
     priority; // int (1 - high | 2 - medium | 3 - low)
     completed; // bool
 
-    constructor(title, description = "", dueDate = "No due date", priority = 3) {
+    constructor(title, description = "", dueDate = "2025-1-1", priority = 3) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
