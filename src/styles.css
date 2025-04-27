@@ -166,6 +166,19 @@ nav button {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.638);
 }
 
+#sort-by {
+    width: fit-content;
+    text-align: center;
+    border-radius: 20px;
+    background-color: rgb(25, 97, 199);
+    color: white;
+    border: none;
+    font-size: 0.7rem;
+    padding: 5px;
+    box-shadow: 2px 2px 3px 0.3px rgba(0, 0, 0, 0.353);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.638);
+}
+
 .list {
     width: 90%;
     display: grid;

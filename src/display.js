@@ -141,11 +141,45 @@ const display = (function() {
         addTaskButton.classList.add("add-task-button");
         addTaskButton.textContent = "Add New Task";
 
-        const sortTasksButton = document.createElement("button");
-        sortTasksButton.classList.add("sort-tasks-button");
-        sortTasksButton.textContent = "Sort By";
+        const sortTasksSelect = document.createElement("select");
+        sortTasksSelect.id = "sort-by";
+        sortTasksSelect.setAttribute('name', 'sort-by');
+        const sortLabel = document.createElement("label");
+        sortLabel.setAttribute('for', 'sort-by');
+        sortLabel.textContent = "Sort by";
+        sortTasksSelect.appendChild(sortLabel);
+        for (let i = 0; i < 5; i++) {
+            const option = document.createElement("option");
+            if (i == 0) {
+                option.setAttribute('value', 'sort-by-placeholder');
+                option.setAttribute('disabled', 'disabled');
+                option.setAttribute('selected', 'selected');
+                option.textContent = "Sort by";
+            }
+            else if (i == 1) {
+                option.setAttribute('value', 'priority-sort-high');
+                option.textContent = "Priority (Highest)";
+            }
+            else if (i == 2) {
+                option.setAttribute('value', 'priority-sort-low');
+                option.textContent = "Priority (Lowest)";
+            }
+            else if (i == 3) {
+                option.setAttribute('value', 'due-date-sort');
+                option.textContent = "Due Date";
+            }
+            else if (i == 4) {
+                option.setAttribute('value', 'completed-status-sort');
+                option.textContent = "Completed Status";
+            }
+            sortTasksSelect.appendChild(option);
+        }
+        sortTasksSelect.addEventListener("change", function(event) {
+            handleSortSelection(event, thisList);
+        });
+
         listOptions.appendChild(addTaskButton);
-        listOptions.appendChild(sortTasksButton);
+        listOptions.appendChild(sortTasksSelect);
         listContainer.appendChild(listOptions);
 
         // event listeners for addNewTask button
@@ -334,14 +368,7 @@ const display = (function() {
         const details = document.createElement("div");
         details.classList.add("details");
         todoHeader.appendChild(details);
-        const dueDate = document.createElement("div");
-        dueDate.classList.add("due-date");
-        const dueDateNote = document.createElement("p");
-        // HANDLE DUE DATE CASES MORE LATER (COLORS AND MESSAGE FORMATTING)
-        dueDateNote.style.color = "rebeccapurple";
-        dueDateNote.textContent = thisTodo.dueDate;
-        dueDate.appendChild(dueDateNote);
-        details.appendChild(dueDate);
+        
         // PRIORITY COLORS AS WELL
         const priority = document.createElement("div");
         priority.classList.add("priority");
@@ -364,6 +391,15 @@ const display = (function() {
         }
         priority.appendChild(priorityNote);
         details.appendChild(priority);
+
+        const dueDate = document.createElement("div");
+        dueDate.classList.add("due-date");
+        const dueDateNote = document.createElement("p");
+        // HANDLE DUE DATE CASES MORE LATER (COLORS AND MESSAGE FORMATTING)
+        dueDateNote.style.color = "rebeccapurple";
+        dueDateNote.textContent = thisTodo.dueDate;
+        dueDate.appendChild(dueDateNote);
+        details.appendChild(dueDate);
     
         const description = document.createElement("p");
         description.textContent = thisTodo.description;
@@ -542,6 +578,20 @@ const display = (function() {
         content.style.visibility = "visible";
         clearContent();
         displayMyLists();
+    }
+
+    const handleSortSelection = function(event, todoList) {
+        const sortType = event.target.value;
+        switch(true) {
+            case sortType == 'priority-sort-high':
+                todoList.sortByPriority("high");
+                break;
+            case sortType == 'priority-sort-low':
+                todoList.sortByPriority("low");
+                break;
+        }
+        clearContent();
+        displayList(todoList);
     }
 
     return {headerStartup, displayList};

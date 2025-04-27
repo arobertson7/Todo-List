@@ -24,7 +24,13 @@
             <h2>Today's To-dos</h2>
             <div class="list-options">
                 <button class="add-task-button">Add New Task</button>
-                <button class="sort-tasks-button">Sort by</button>
+                 <select name="sort-by" id="sort-by">
+                    <label for="sort-by">Sort by</label>
+                    <option value="sort-by-placeholder" disabled selected>Sort by</option>
+                    <option value="priority-sort">Priority</option>
+                    <option value="due-date-sort">Due Date</option>
+                    <option value="completed-status-sort">Completed Status</option>
+                 </select>
             </div>
             <div class="list">
                 <div class="todo">

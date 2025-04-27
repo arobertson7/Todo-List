@@ -82,15 +82,32 @@ class TodoList {
     }
 
     // sorts the list by priority using insertion sort (highest to lowest)
-    sortByPriority() {
-        for (let i = 1; i < this.list.length(); i++) {
-            let j = i;
-            while (j > 0 && this.list[j].priority < this.list[j - 1].priority) {
-                // swap
-                const temp = this.list[j];
-                this.list[j] = this.list[j - 1];
-                this.list[j - 1] = temp;
-                j--;
+    // param 'direction' takes string "high" or "low"
+    sortByPriority(direction) {
+        // sort by highest
+        if (direction == "high") {
+            for (let i = 1; i < this.list.length; i++) {
+                let j = i;
+                while (j > 0 && this.list[j].priority < this.list[j - 1].priority) {
+                    // swap
+                    const temp = this.list[j];
+                    this.list[j] = this.list[j - 1];
+                    this.list[j - 1] = temp;
+                    j--;
+                }
+            }
+        }
+        // sort by lowest
+        if (direction == "low") {
+            for (let i = 1; i < this.list.length; i++) {
+                let j = i;
+                while (j > 0 && this.list[j].priority > this.list[j - 1].priority) {
+                    // swap
+                    const temp = this.list[j];
+                    this.list[j] = this.list[j - 1];
+                    this.list[j - 1] = temp;
+                    j--;
+                }
             }
         }
     }
