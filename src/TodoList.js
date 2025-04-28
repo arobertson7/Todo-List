@@ -1,4 +1,5 @@
 // import Todo from "./Todo.js"
+import { formatDateYYYYMMDD } from "./format-date.js"
 
 class TodoList {
     title // string
@@ -81,7 +82,7 @@ class TodoList {
         }
     }
 
-    // sorts the list by priority using insertion sort (highest to lowest)
+    // sorts the list by priority using insertion sort
     // param 'direction' takes string "high" or "low"
     sortByPriority(direction) {
         // sort by highest
@@ -112,7 +113,92 @@ class TodoList {
         }
     }
 
+    // sorts the list by dueDate using insertion sort
+    // param 'direction' takes string "earliest" or "latest"
+    sortByDueDate(direction) {
+        // fill an array with the string dates formatted in yyyy-mm-dd to make them comparable
+        const formattedDates = [];
+        for (let i = 0; i < this.list.length; i++) {
+            const formatted = formatDateYYYYMMDD(this.list[i].dueDate);
+            formattedDates.push(formatted);
+        }
 
+        // sort by earliest first
+        if (direction == "earliest") {
+            for (let i = 1; i < this.list.length; i++) {
+                let j = i;
+                while (j > 0 && formattedDates[j] < formattedDates[j - 1]) {
+                    // swap in actual list
+                    const temp = this.list[j];
+                    this.list[j] = this.list[j - 1];
+                    this.list[j - 1] = temp;
+
+                    // swap in formattedDates list to keep it current
+                    const tempFormatted = formattedDates[j];
+                    formattedDates[j] = formattedDates[j - 1];
+                    formattedDates[j - 1] = tempFormatted;
+                    j--;
+                }
+            }
+        }
+        // sort by latest first
+        if (direction == "latest") {
+            for (let i = 1; i < this.list.length; i++) {
+                let j = i;
+                while (j > 0 && formattedDates[j] > formattedDates[j - 1]) {
+                    // swap
+                    const temp = this.list[j];
+                    this.list[j] = this.list[j - 1];
+                    this.list[j - 1] = temp;
+                    
+                    // swap in formattedDates list to keep it current
+                    const tempFormatted = formattedDates[j];
+                    formattedDates[j] = formattedDates[j - 1];
+                    formattedDates[j - 1] = tempFormatted;
+                    j--;
+                }
+            }
+        }
+    }
+
+    // sorts the list by completed status with 2 passes
+    // param 'status' takes string "completed" or "incomplete"
+    sortByCompletedStatus(status) {
+        let result = [];
+        // sort by completed
+        if (status == "completed") {
+            // add completed todo's to result array
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.list[i].completed) {
+                    result.push(this.list[i]);
+                }
+            }
+            // then add incomplete todo's to result array
+            for (let j = 0; j < this.list.length; j++) {
+                if (!this.list[j].completed) {
+                    result.push(this.list[j]);
+                }
+            }
+        }
+        // sort by incomplete
+        if (status == "incomplete") {
+            // add incomplete todo's to result array
+            for (let i = 0; i < this.list.length; i++) {
+                if (!this.list[i].completed) {
+                    result.push(this.list[i]);
+                }
+            }
+            // then add completed todo's to result array
+            for (let j = 0; j < this.list.length; j++) {
+                if (this.list[j].completed) {
+                    result.push(this.list[j]);
+                }
+            }
+        }
+
+        // copy result back to actual list
+        this.list = result;
+    }
     
  };
 

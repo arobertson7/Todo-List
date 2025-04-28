@@ -1,5 +1,4 @@
 import "./styles.css";
-import { format, formatDistanceStrict } from "date-fns";
 
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
@@ -44,19 +43,3 @@ const list3 = new TodoList("List 3");
 const list4 = new TodoList("List 4");
 myLists.push(list3);
 
-// console.log(format("2027-2-20", "EEEE"));
-// console.log(format("2027-2-14", "MMM d y"));
-
-// let today = new Date();
-// today = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-// console.log(today);
-
-// let nextWeek = '2025-4-21';
-// console.log(formatDistanceStrict(today, nextWeek));
-
-// const distance = formatDistanceStrict(today, nextWeek).split(" ");
-// console.log(distance);
-
-// if (distance[1] == "days" && distance[0] < 7) {
-//     console.log("worked");
-// }

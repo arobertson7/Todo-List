@@ -1,8 +1,7 @@
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
 import { myLists } from "./index.js";
-import { format, formatDistanceStrict } from "date-fns";
-import { formatDateFromInput, formatDateForEditTaskDialog, formatDueDateForDisplay } from "./format-date.js";
+import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from "./format-date.js";
 
 const display = (function() {
     
@@ -150,7 +149,7 @@ const display = (function() {
         sortLabel.setAttribute('for', 'sort-by');
         sortLabel.textContent = "Sort by";
         sortTasksSelect.appendChild(sortLabel);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
             const option = document.createElement("option");
             if (i == 0) {
                 option.setAttribute('value', 'sort-by-placeholder');
@@ -167,12 +166,20 @@ const display = (function() {
                 option.textContent = "Priority (Lowest)";
             }
             else if (i == 3) {
-                option.setAttribute('value', 'due-date-sort');
-                option.textContent = "Due Date";
+                option.setAttribute('value', 'due-date-sort-earliest');
+                option.textContent = "Due Date (Earliest)";
             }
             else if (i == 4) {
-                option.setAttribute('value', 'completed-status-sort');
-                option.textContent = "Completed Status";
+                option.setAttribute('value', 'due-date-sort-latest');
+                option.textContent = "Due Date (Latest)";
+            }
+            else if (i == 5) {
+                option.setAttribute('value', 'completed-status-sort-completed');
+                option.textContent = "Completed (Yes)";
+            }
+            else if (i == 6) {
+                option.setAttribute('value', 'completed-status-sort-incomplete');
+                option.textContent = "Completed (No)";
             }
             sortTasksSelect.appendChild(option);
         }
@@ -291,7 +298,7 @@ const display = (function() {
             const descriptionField = document.getElementById("edited-task-description");
             descriptionField.value = thisTodo.description;
             const dueDateField = document.getElementById("edited-task-due-date");
-            dueDateField.value = formatDateForEditTaskDialog(thisTodo.dueDate);
+            dueDateField.value = formatDateYYYYMMDD(thisTodo.dueDate);
             
             // specific to priority
             const priorityIndex = thisTodo.priority - 1;
@@ -411,6 +418,9 @@ const display = (function() {
         completedButton.classList.add("completed-button");
         completedButton.textContent = "mark completed";
         todo.appendChild(completedButton);
+        completedButton.addEventListener("click", () => {
+            thisList.list[taskIndex].markComplete();
+        })
         
         return todo;
     }
@@ -591,6 +601,18 @@ const display = (function() {
                 break;
             case sortType == 'priority-sort-low':
                 todoList.sortByPriority("low");
+                break;
+            case sortType == 'due-date-sort-earliest':
+                todoList.sortByDueDate("earliest");
+                break;
+            case sortType == 'due-date-sort-latest':
+                todoList.sortByDueDate("latest");
+                break;
+            case sortType == 'completed-status-sort-completed':
+                todoList.sortByCompletedStatus("completed");
+                break;
+            case sortType == 'completed-status-sort-incomplete':
+                todoList.sortByCompletedStatus("incomplete");
                 break;
         }
         clearContent();
