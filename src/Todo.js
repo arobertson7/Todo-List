@@ -15,7 +15,7 @@ class Todo {
         this.completed = false;
     }
 
-    markComplete() {
+    setCompleted() {
         this.completed = true;
     }
 

@@ -107,6 +107,32 @@ const display = (function() {
                 }
             })
         }
+
+        // style edited completed status buttons
+        const completedButton = document.querySelector(".styled-edited-completed-button");
+        const incompleteButton = document.querySelector(".styled-edited-incomplete-button");
+        completedButton.addEventListener("click", () => {
+            completedButton.style.backgroundColor = "rgb(47, 181, 93)";
+            completedButton.childNodes[1].style.color = "white";
+            completedButton.childNodes[0].setAttribute('checked', 'checked');
+
+            incompleteButton.style.backgroundColor = "white";
+            incompleteButton.childNodes[1].style.color = "rgb(47, 181, 93)";
+            if (incompleteButton.childNodes[0].hasAttribute('checked')) {
+                incompleteButton.childNodes[0].removeAttribute('checked');
+            }
+        })
+        incompleteButton.addEventListener("click", () => {
+            incompleteButton.style.backgroundColor = "rgb(47, 181, 93)";
+            incompleteButton.childNodes[1].style.color = "white";
+            incompleteButton.childNodes[0].setAttribute('checked', 'checked');
+
+            completedButton.style.backgroundColor = "white";
+            completedButton.childNodes[1].style.color = "rgb(47, 181, 93)";
+            if (completedButton.childNodes[0].hasAttribute('checked')) {
+                completedButton.childNodes[0].removeAttribute('checked');
+            }
+        })
     }
     
     const displayList = function(thisList) {
@@ -277,6 +303,7 @@ const display = (function() {
 
         const todo = document.createElement("div"); // Todo card DOM element
         todo.classList.add("todo");
+        // todo.classList.add(`index${taskIndex}`);
 
         const editButton = document.createElement("button");
         editButton.classList.add("edit-button");
@@ -411,6 +438,7 @@ const display = (function() {
         details.appendChild(dueDate);
     
         const description = document.createElement("p");
+        description.classList.add("todo-description");
         description.textContent = thisTodo.description;
         todo.appendChild(description);
     
@@ -419,8 +447,13 @@ const display = (function() {
         completedButton.textContent = "mark completed";
         todo.appendChild(completedButton);
         completedButton.addEventListener("click", () => {
-            thisList.list[taskIndex].markComplete();
+            thisList.list[taskIndex].setCompleted();
+            markCardCompleted(todo);
         })
+
+        if (thisList.list[taskIndex].completed) {
+            markCardCompleted(todo);
+        }
         
         return todo;
     }
@@ -617,6 +650,30 @@ const display = (function() {
         }
         clearContent();
         displayList(todoList);
+    }
+
+    const markCardCompleted = function(card) {
+        card.classList.add("color-transition");
+        card.style.background = "rgb(47, 181, 93)";
+        card.style.color = "white";
+        const details = card.querySelector(".details");
+        details.style.visibility = "hidden";
+        const completedButton = card.querySelector(".completed-button");
+        card.removeChild(completedButton);
+        const completedMessage = document.createElement("p");
+        completedMessage.style.gridColumn = "2";
+        completedMessage.style.gridRow = "3";
+        completedMessage.textContent = "Completed";
+        completedMessage.style.border = "1px solid white";
+        completedMessage.style.padding = "2px 10px";
+        completedMessage.style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
+        card.appendChild(completedMessage);
+        card.querySelector(".todo-header").style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
+        card.querySelector(".todo-description").style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
+        const completedCheckMark = document.createElement("h6");
+        completedCheckMark.classList.add("completed-check-mark");
+        completedCheckMark.textContent = "✓";
+        card.insertBefore(completedCheckMark, card.querySelector(".edit-button"));
     }
 
     return {headerStartup, displayList};

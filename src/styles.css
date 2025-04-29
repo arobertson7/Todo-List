@@ -273,6 +273,14 @@ nav button {
     font-size: 0.7rem;
 }
 
+.completed-check-mark {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    font-size: 2rem;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.68);
+}
+
 /* container for message when there are no taks */
 .empty-list-message {
     width: 100%;
@@ -349,14 +357,14 @@ nav button {
     left: 5px;
 }
 
-.new-priority-form-container fieldset, .edited-priority-form-container fieldset {
+.new-priority-form-container fieldset, .edited-priority-form-container fieldset, .edited-completed-status-form-container fieldset {
     padding: 0px;
     border: none;
     display: flex;
     flex-direction: column;
 }
 
-.priority-option-buttons, .edited-priority-option-buttons {
+.priority-option-buttons, .edited-priority-option-buttons, .edited-completed-status-buttons {
     position: relative;
     left: 5px;
     margin-top: 10px;
@@ -364,7 +372,7 @@ nav button {
     gap: 20px;
 }
 
-.priority-option-buttons input, .edited-priority-option-buttons input {
+.priority-option-buttons input, .edited-priority-option-buttons input, .edited-completed-status-buttons input {
     appearance: none;
     
 }
@@ -398,6 +406,24 @@ nav button {
 .priority-option-buttons > div:last-child > button, .edited-priority-option-buttons > div:last-child > button {
     background-color: white;
     border: 1.2px solid var(--low-priority-color);
+}
+
+.edited-completed-status-buttons > div:first-child > button {
+    background-color: rgb(47, 181, 93);
+    border: 1.2px solid rgb(47, 181, 93);
+}
+
+.edited-completed-status-buttons > div:first-child > button label {
+    color: white;
+}
+
+.edited-completed-status-buttons > div:last-child > button {
+    background-color: white;
+    border: 1.2px solid rgb(47, 181, 93);
+}
+
+.edited-completed-status-buttons div label {
+    color: rgb(47, 181, 93);
 }
 
 .submit-new-task-form-button, .submit-edited-task-form-button, .submit-new-list-button {
