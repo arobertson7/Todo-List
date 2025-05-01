@@ -2,6 +2,9 @@ import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
 import { myLists } from "./index.js";
 import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from "./format-date.js";
+import cogIcon from "./cog.svg";
+import homeIcon from "./home.svg";
+import tuneIcon from "./tune.svg";
 
 const display = (function() {
     
@@ -26,10 +29,32 @@ const display = (function() {
                 const navButton = document.createElement("button");
                 navButton.style.opacity = "0";
                 nav.appendChild(navButton);
+                if (i == 1) {
+                    navButton.id = "nav-home-button";
+                    const homeImageElement = document.createElement("img");
+                    homeImageElement.src = homeIcon;
+                    homeImageElement.style.width = "70%";
+                    homeImageElement.style.height = "70%";
+                    homeImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
+                    navButton.appendChild(homeImageElement);
+                }
+                else if (i == 0) {
+                    navButton.id = "nav-settings-button";
+                    const tuneImageElement = document.createElement("img");
+                    tuneImageElement.src = tuneIcon;
+                    tuneImageElement.style.width = "60%";
+                    tuneImageElement.style.height = "60%";
+                    tuneImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
+                    navButton.appendChild(tuneImageElement);
+                }
+                else if (i == 2) {
+                    navButton.id = "nav-my-lists-button";
+                    const myListsText = document.createElement("p");
+                    myListsText.textContent = "My Lists";
+                    navButton.appendChild(myListsText);
+                    navButton.addEventListener("click", displayMyLists);
+                }
             }
-    
-            nav.childNodes[2].textContent = "My Lists";
-            nav.childNodes[2].addEventListener("click", displayMyLists);
     
             header.removeChild(message);
             header.appendChild(nav);
@@ -312,6 +337,11 @@ const display = (function() {
         editButton.addEventListener("click", () => {
             const dialog = document.getElementById("edit-task-dialog");
             dialog.showModal();
+
+            // show completed status options iff the task is marked completed
+            if (thisList.list[taskIndex].completed) {
+                dialog.querySelector(".edited-completed-status-form-container").style.visibility = "visible";
+            }
         
             const overlay = document.querySelector(".modal-overlay");
             overlay.style.visibility = "visible";
@@ -337,19 +367,29 @@ const display = (function() {
             const priorityAsString = editTaskPriorityButtons[priorityIndex].classList[1];
             editTaskPriorityButtons[priorityIndex].style.backgroundColor = `var(--${priorityAsString}-priority-color)`;
             editTaskPriorityButtons[priorityIndex].childNodes[1].style.color = "white";
+            editTaskPriorityButtons[priorityIndex].childNodes[0].setAttribute('checked', 'checked');
             for (let j = 0; j < editTaskPriorityButtons.length; j++) {
                 if (j != priorityIndex) {
                     if (j == 0) {
                         editTaskPriorityButtons[j].style.backgroundColor = "white";
                         editTaskPriorityButtons[j].childNodes[1].style.color = "var(--high-priority-color)";
+                        if (editTaskPriorityButtons[j].childNodes[0].hasAttribute('checked')) {
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
+                        }
                     }
                     else if (j == 1) {
                         editTaskPriorityButtons[j].style.backgroundColor = "white";
                         editTaskPriorityButtons[j].childNodes[1].style.color = "var(--medium-priority-color)";
+                        if (editTaskPriorityButtons[j].childNodes[0].hasAttribute('checked')) {
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
+                        }
                     }
                     else if (j == 2) {
                         editTaskPriorityButtons[j].style.backgroundColor = "white";
                         editTaskPriorityButtons[j].childNodes[1].style.color = "var(--low-priority-color)";
+                        if (editTaskPriorityButtons[j].childNodes[0].hasAttribute('checked')) {
+                            editTaskPriorityButtons[j].childNodes[0].removeAttribute('checked');
+                        }
                     }
                 }
             }
@@ -377,6 +417,10 @@ const display = (function() {
                 dialog.close();
                 overlay.style.visibility = "hidden";
                 listContainer.style.visibility = "visible";
+                // if visible, reset completed status options to hidden and "completed" as selected
+                if (dialog.querySelector(".edited-completed-status-form-container").style.visibility = "visible") {
+                    hideAndResetCompletedStatusField();
+                }
 
                 // bandaid solution for now to avoid multiple event listeners for submit
                 const form = document.querySelector(".edit-task-form");
@@ -458,6 +502,20 @@ const display = (function() {
         return todo;
     }
 
+    const hideAndResetCompletedStatusField = function() {
+        document.querySelector(".edited-completed-status-form-container").style.visibility = "hidden";
+        const completedButton = document.querySelector(".styled-edited-completed-button");
+        const incompleteButton = document.querySelector(".styled-edited-incomplete-button");
+        completedButton.style.backgroundColor = "rgb(47, 181, 93)";
+        completedButton.childNodes[1].style.color = "white";
+        completedButton.childNodes[0].setAttribute('checked', 'checked');
+        incompleteButton.style.backgroundColor = "white";
+        incompleteButton.childNodes[1].style.color = "rgb(47, 181, 93)";
+        if (incompleteButton.childNodes[0].hasAttribute('checked')) {
+            incompleteButton.childNodes[0].removeAttribute('checked');
+        }
+    }
+
     const clearContent = function() {
         const content = document.getElementById("content");
         for (let i = content.childNodes.length - 1; i >= 0; i--) {
@@ -518,6 +576,12 @@ const display = (function() {
         thisList.list[taskIndex].description = editedDescription;
         thisList.list[taskIndex].dueDate = formatDateFromInput(editedDueDate);
         thisList.list[taskIndex].priority = editedPriority;
+        // updated completed status if it was changed to incomplete
+        const incompleteStatusInput = document.getElementById("edited-incomplete-button");
+        if (incompleteStatusInput.hasAttribute('checked')) {
+            thisList.list[taskIndex].completed = false;
+            hideAndResetCompletedStatusField();
+        }
 
         // reset form, close modal, and refresh list
         const editsForm = document.querySelector(".edit-task-form");
@@ -579,6 +643,20 @@ const display = (function() {
         });
 
         myListsContainer.appendChild(myListOptions);
+        const settingsButton = document.createElement("button");
+        settingsButton.classList.add("my-list-settings-button");
+        const cogImageElement = document.createElement("img");
+        cogImageElement.style.width = "100%";
+        cogImageElement.style.height = "100%";
+        cogImageElement.src = cogIcon;
+        cogImageElement.style.fill = "green";
+        cogImageElement.style.filter = "drop-shadow(1px 1px 1px rgb(0 0 0 / 0.4))";
+        settingsButton.appendChild(cogImageElement);
+        myListsContainer.appendChild(settingsButton);
+        settingsButton.addEventListener("click", () => {
+            prompt("hi");
+        })
+
 
         // lists
         const listCollection = document.createElement("div");
