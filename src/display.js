@@ -506,10 +506,51 @@ const display = (function() {
         }
     }
 
+    // this clear everything in id="content"
     const clearContent = function() {
         const content = document.getElementById("content");
         for (let i = content.childNodes.length - 1; i >= 0; i--) {
             content.removeChild(content.childNodes[i]);
+        }
+    }
+
+    // this clears and updates the list itself (list title and options buttons stay)
+    const refreshList = function(thisList) {
+        const listContainer = document.querySelector(".list-container");
+        const list = listContainer.querySelector(".list");
+        listContainer.removeChild(list);
+
+        const refreshedlist = document.createElement("div");
+        refreshedlist.classList.add("list");
+        listContainer.appendChild(refreshedlist);
+    
+        // display message if there are no tasks
+        if (thisList.size() == 0) {
+            const messageContainer = document.createElement("div");
+            messageContainer.classList.add("empty-list-message");
+            const message = document.createElement("h2");
+            message.textContent = "You're all caught up! Go enjoy the sun!☀️";
+            messageContainer.appendChild(message);
+            listContainer.appendChild(messageContainer);
+        }
+        else {
+            for (let i = 0; i < thisList.size(); i++) {
+                // create and append task
+                const todoCard = generateTodoCard(thisList, i);
+                refreshedlist.appendChild(todoCard);
+            }
+        }
+
+        // add sort toggle button if list was just sorted (the first time - doesn't duplicate buttons)
+        if (listContainer.classList.contains("sorted") && !document.getElementById("sort-toggle-button")) {
+            const sortToggleButton = document.createElement("button");
+            sortToggleButton.id = "sort-toggle-button";
+            const arrowImage = document.createElement("img");
+            arrowImage.src = downArrowIcon;
+            sortToggleButton.appendChild(arrowImage);
+            const listOptions = document.querySelector(".list-options")
+            listOptions.appendChild(sortToggleButton);
+            sortToggleButton.addEventListener("click", handleSortToggle);
         }
     }
 
@@ -529,8 +570,7 @@ const display = (function() {
         this.add(newTodo); // "this" references "thisList"
         
         // add to list display
-        clearContent();
-        displayList(this);
+        refreshList(this);
 
         // close dialog and reset form
         const form = document.querySelector(".add-new-task-form");
@@ -580,8 +620,9 @@ const display = (function() {
         dialog.close();
         const overlay = document.querySelector(".modal-overlay");
         overlay.style.visibility = "hidden";
-        clearContent();
-        displayList(thisList);
+        const listContainer = document.querySelector(".list-container");
+        listContainer.style.visibility = "visible";
+        refreshList(thisList);
 
         // bandaid solution for now to avoid duplicate event listeners, was causing problems
         const oldSubmitEditsButton = document.querySelector(".submit-edited-task-form-button");
@@ -707,23 +748,13 @@ const display = (function() {
                 todoList.sortByCompletedStatus("completed");
                 break;
         }
-        content.classList.add("sorted");
-        clearContent();
-        displayList(todoList);
-
-        // add sort toggle button
-        const sortToggleButton = document.createElement("button");
-        sortToggleButton.id = "sort-toggle-button";
-        const arrowImage = document.createElement("img");
-        arrowImage.src = downArrowIcon;
-        sortToggleButton.appendChild(arrowImage);
-        const listOptions = document.querySelector(".list-options");
-        listOptions.appendChild(sortToggleButton);
-        sortToggleButton.addEventListener("click", handleSortToggle);
+        const listContainer = document.querySelector(".list-container");
+        listContainer.classList.add("sorted");
+        refreshList(todoList);
     }
 
     const handleSortToggle = function() {
-
+        
     }
 
     const markCardCompleted = function(card) {
