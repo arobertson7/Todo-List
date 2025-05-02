@@ -3,10 +3,12 @@ import TodoList from "./TodoList.js";
 import { myLists } from "./index.js";
 import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from "./format-date.js";
 import cogIcon from "./cog.svg";
+import whiteCogIcon from "./cog-white.svg";
 import homeIcon from "./home.svg";
 import tuneIcon from "./tune.svg";
 import downArrowIcon from "./down-arrow-icon.svg";
 import upArrowIcon from "./up-arrow-icon.svg";
+import editIcon from "./edit-icon.svg";
 
 const display = (function() {
     
@@ -300,7 +302,7 @@ const display = (function() {
             const message = document.createElement("h2");
             message.textContent = "You're all caught up! Go enjoy the sun!☀️";
             messageContainer.appendChild(message);
-            listContainer.appendChild(messageContainer);
+            list.appendChild(messageContainer);
         }
         else {
             for (let i = 0; i < thisList.size(); i++) {
@@ -531,7 +533,7 @@ const display = (function() {
             const message = document.createElement("h2");
             message.textContent = "You're all caught up! Go enjoy the sun!☀️";
             messageContainer.appendChild(message);
-            listContainer.appendChild(messageContainer);
+            refreshedlist.appendChild(messageContainer);
         }
         else {
             for (let i = 0; i < thisList.size(); i++) {
@@ -550,7 +552,9 @@ const display = (function() {
             sortToggleButton.appendChild(arrowImage);
             const listOptions = document.querySelector(".list-options")
             listOptions.appendChild(sortToggleButton);
-            sortToggleButton.addEventListener("click", handleSortToggle);
+            sortToggleButton.addEventListener("click", function () {
+                handleSortToggle(thisList);
+            });
         }
     }
 
@@ -684,10 +688,7 @@ const display = (function() {
         cogImageElement.style.filter = "drop-shadow(1px 1px 1px rgb(0 0 0 / 0.4))";
         settingsButton.appendChild(cogImageElement);
         myListsContainer.appendChild(settingsButton);
-        settingsButton.addEventListener("click", () => {
-            prompt("hi");
-        })
-
+        settingsButton.addEventListener("click", openMyListSettings);
 
         // lists
         const listCollection = document.createElement("div");
@@ -715,6 +716,44 @@ const display = (function() {
         }
     }
 
+    const openMyListSettings = function() {
+        const myListContainer = document.querySelector(".my-lists-container");
+        myListContainer.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        const cogButton = document.querySelector(".my-list-settings-button");
+        // cogButton.style.zIndex = "1000";
+        // cogButton.childNodes[0].src = whiteCogIcon;
+
+        const listCards = document.querySelectorAll(".list-card");
+        for (let i = 0; i < listCards.length; i++) {
+            const overlay = document.createElement("div");
+            overlay.classList.add("my-list-settings-overlay");
+            listCards[i].appendChild(overlay);
+            listCards[i].style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
+            listCards[i].removeChild(listCards[i].childNodes[1]);
+            listCards[i].childNodes[0].style.zIndex = "150";
+            listCards[i].childNodes[0].style.background = "linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, rgba(255, 255, 255, 0.8))";
+            myListContainer.childNodes[0].style.opacity = "0.8";
+            const newListButton = document.querySelector(".new-list-button");
+            newListButton.style.opacity = "0.8";
+            // create edit button
+            const editListButton = document.createElement("button");
+            editListButton.classList.add("edit-list-button");
+            editListButton.appendChild(document.createElement("h4"));
+            editListButton.childNodes[0].textContent = "Edit";
+            const editIconImage = document.createElement("img");
+            editIconImage.src = editIcon;
+            editListButton.style.zIndex = "150";
+            editListButton.style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
+            editIconImage.style.width = "50%";
+            editIconImage.style.height = "50%";
+            editListButton.appendChild(editIconImage);
+            listCards[i].appendChild(editListButton);
+        }
+
+        
+        cogButton.addEventListener("click", displayMyLists);
+    }
+
     const handleCreateNewList = function(event) {
         event.preventDefault();
 
@@ -736,25 +775,75 @@ const display = (function() {
     }
 
     const handleSortSelection = function(event, todoList) {
+        const listContainer = document.querySelector(".list-container");
+        listContainer.classList.add("sorted");
+
         const sortType = event.target.value;
         switch(true) {
             case sortType == 'priority-sort':
                 todoList.sortByPriority("high");
+                listContainer.classList.add("sorted-priority-high");
                 break;
             case sortType == 'due-date-sort':
                 todoList.sortByDueDate("earliest");
+                listContainer.classList.add("sorted-due-date-high");
                 break;
             case sortType == 'completed-status-sort':
                 todoList.sortByCompletedStatus("completed");
+                listContainer.classList.add("sorted-completed-high");
                 break;
         }
-        const listContainer = document.querySelector(".list-container");
-        listContainer.classList.add("sorted");
+        // if this isn't the first sort (toggle button is present), point arrow down
+        if (document.getElementById("sort-toggle-button")) {
+            const arrowIcon = document.getElementById("sort-toggle-button").childNodes[0];
+            arrowIcon.src = downArrowIcon;
+        }
+
         refreshList(todoList);
     }
 
-    const handleSortToggle = function() {
-        
+    const handleSortToggle = function(todoList) {
+        const listContainer = document.querySelector(".list-container");
+        const currentSort = listContainer.classList[listContainer.classList.length - 1];
+        // loop fixes bug of multiple sort type classes being present when switching sort types
+        for (let i = 2; i < listContainer.classList.length; i++) {
+            listContainer.classList.remove(listContainer.classList[i]);
+        }
+        const arrowIcon = document.getElementById("sort-toggle-button").childNodes[0];
+
+        switch(true) {
+            case currentSort == "sorted-priority-high":
+                arrowIcon.src = upArrowIcon;
+                todoList.sortByPriority("low");
+                listContainer.classList.add("sorted-priority-low");
+                break;
+            case currentSort == "sorted-priority-low":
+                arrowIcon.src = downArrowIcon;
+                todoList.sortByPriority("high");
+                listContainer.classList.add("sorted-priority-high");
+                break;
+            case currentSort == "sorted-due-date-high":
+                arrowIcon.src = upArrowIcon;
+                todoList.sortByDueDate("latest");
+                listContainer.classList.add("sorted-due-date-low");
+                break;
+            case currentSort == "sorted-due-date-low":
+                arrowIcon.src = downArrowIcon;
+                todoList.sortByDueDate("earliest");
+                listContainer.classList.add("sorted-due-date-high");
+                break;
+            case currentSort == "sorted-completed-high":
+                arrowIcon.src = upArrowIcon;
+                todoList.sortByCompletedStatus("incomplete");
+                listContainer.classList.add("sorted-completed-low");
+                break;
+            case currentSort == "sorted-completed-low":
+                arrowIcon.src = downArrowIcon;
+                todoList.sortByCompletedStatus("completed");
+                listContainer.classList.add("sorted-completed-high");
+                break;
+        }
+        refreshList(todoList);
     }
 
     const markCardCompleted = function(card) {
