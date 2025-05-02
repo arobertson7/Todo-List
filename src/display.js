@@ -718,7 +718,7 @@ const display = (function() {
 
     const openMyListSettings = function() {
         const myListContainer = document.querySelector(".my-lists-container");
-        myListContainer.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        myListContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
         const cogButton = document.querySelector(".my-list-settings-button");
         // cogButton.style.zIndex = "1000";
         // cogButton.childNodes[0].src = whiteCogIcon;
@@ -732,9 +732,11 @@ const display = (function() {
             listCards[i].removeChild(listCards[i].childNodes[1]);
             listCards[i].childNodes[0].style.zIndex = "150";
             listCards[i].childNodes[0].style.background = "linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, rgba(255, 255, 255, 0.8))";
-            myListContainer.childNodes[0].style.opacity = "0.8";
+            myListContainer.childNodes[0].textContent = "Edit";
+            myListContainer.childNodes[0].style.borderBottom = "2px solid black";
+            myListContainer.childNodes[0].style.padding = "0px 22px";
             const newListButton = document.querySelector(".new-list-button");
-            newListButton.style.opacity = "0.8";
+            newListButton.style.visibility = "hidden";
             // create edit button
             const editListButton = document.createElement("button");
             editListButton.classList.add("edit-list-button");
