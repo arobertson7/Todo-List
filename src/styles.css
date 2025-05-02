@@ -188,6 +188,18 @@ nav button {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.638);
 }
 
+#sort-toggle-button {
+    width: 10%;
+    border-radius: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sort-toggle-button img {
+    width: 100%;
+}
+
 .list {
     width: 90%;
     display: grid;

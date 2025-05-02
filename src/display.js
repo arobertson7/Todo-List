@@ -5,6 +5,8 @@ import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from
 import cogIcon from "./cog.svg";
 import homeIcon from "./home.svg";
 import tuneIcon from "./tune.svg";
+import downArrowIcon from "./down-arrow-icon.svg";
+import upArrowIcon from "./up-arrow-icon.svg";
 
 const display = (function() {
     
@@ -200,7 +202,7 @@ const display = (function() {
         sortLabel.setAttribute('for', 'sort-by');
         sortLabel.textContent = "Sort by";
         sortTasksSelect.appendChild(sortLabel);
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 4; i++) {
             const option = document.createElement("option");
             if (i == 0) {
                 option.setAttribute('value', 'sort-by-placeholder');
@@ -209,28 +211,16 @@ const display = (function() {
                 option.textContent = "Sort by";
             }
             else if (i == 1) {
-                option.setAttribute('value', 'priority-sort-high');
-                option.textContent = "Priority (Highest)";
+                option.setAttribute('value', 'priority-sort');
+                option.textContent = "Priority";
             }
             else if (i == 2) {
-                option.setAttribute('value', 'priority-sort-low');
-                option.textContent = "Priority (Lowest)";
+                option.setAttribute('value', 'due-date-sort');
+                option.textContent = "Due Date";
             }
             else if (i == 3) {
-                option.setAttribute('value', 'due-date-sort-earliest');
-                option.textContent = "Due Date (Earliest)";
-            }
-            else if (i == 4) {
-                option.setAttribute('value', 'due-date-sort-latest');
-                option.textContent = "Due Date (Latest)";
-            }
-            else if (i == 5) {
-                option.setAttribute('value', 'completed-status-sort-completed');
-                option.textContent = "Completed (Yes)";
-            }
-            else if (i == 6) {
-                option.setAttribute('value', 'completed-status-sort-incomplete');
-                option.textContent = "Completed (No)";
+                option.setAttribute('value', 'completed-status-sort');
+                option.textContent = "Completed";
             }
             sortTasksSelect.appendChild(option);
         }
@@ -707,27 +697,33 @@ const display = (function() {
     const handleSortSelection = function(event, todoList) {
         const sortType = event.target.value;
         switch(true) {
-            case sortType == 'priority-sort-high':
+            case sortType == 'priority-sort':
                 todoList.sortByPriority("high");
                 break;
-            case sortType == 'priority-sort-low':
-                todoList.sortByPriority("low");
-                break;
-            case sortType == 'due-date-sort-earliest':
+            case sortType == 'due-date-sort':
                 todoList.sortByDueDate("earliest");
                 break;
-            case sortType == 'due-date-sort-latest':
-                todoList.sortByDueDate("latest");
-                break;
-            case sortType == 'completed-status-sort-completed':
+            case sortType == 'completed-status-sort':
                 todoList.sortByCompletedStatus("completed");
                 break;
-            case sortType == 'completed-status-sort-incomplete':
-                todoList.sortByCompletedStatus("incomplete");
-                break;
         }
+        content.classList.add("sorted");
         clearContent();
         displayList(todoList);
+
+        // add sort toggle button
+        const sortToggleButton = document.createElement("button");
+        sortToggleButton.id = "sort-toggle-button";
+        const arrowImage = document.createElement("img");
+        arrowImage.src = downArrowIcon;
+        sortToggleButton.appendChild(arrowImage);
+        const listOptions = document.querySelector(".list-options");
+        listOptions.appendChild(sortToggleButton);
+        sortToggleButton.addEventListener("click", handleSortToggle);
+    }
+
+    const handleSortToggle = function() {
+
     }
 
     const markCardCompleted = function(card) {
