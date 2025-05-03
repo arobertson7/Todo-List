@@ -816,6 +816,7 @@ const display = (function() {
 
         // BUTTONS
         const renameListButton = dialog.querySelector(".rename-list-button");
+        renameListButton.classList.add(`index${listIndex}`);
         const homeListButton = dialog.querySelector(".home-list-button");
         homeListButton.classList.add(`index${listIndex}`);
         const removeListButton = dialog.querySelector(".remove-list-button");
@@ -829,12 +830,20 @@ const display = (function() {
             homeListButton.style.border = "none";
             homeListButton.style.color = "white";
             homeListButton.childNodes[0].textContent = "Home List"; // span contains the text
+            homeListButton.style.fontWeight = "600";
+        }
+        else {
+            homeListButton.style.fontWeight = null;
         }
 
         // EVENT LISTENERS FOR EDITING BUTTONS
         renameListButton.addEventListener("click", handleClickRenameListButton);
         homeListButton.addEventListener("click", handleClickHomeListButton);
-        removeListButton.addEventListener("click", handleClickRemoveListButton);
+        removeListButton.addEventListener("click", confirmRemoveList);
+        listTitleHeader.addEventListener("click", handleClickRenameListButton);
+
+        const doneButton = document.querySelector(".submit-edit-list-button");
+        doneButton.addEventListener("click", handleSubmitEditedList);
 
         const closeDialogButton = document.querySelector(".close-edit-list-dialog-button");
         closeDialogButton.addEventListener("click", () => {
@@ -844,39 +853,132 @@ const display = (function() {
 
             removeListButton.classList.remove(`index${listIndex}`);
             homeListButton.classList.remove(`index${listIndex}`);
+            renameListButton.classList.remove(`index${listIndex}`);
             const homeListIcon = document.querySelector(".home-list-icon");
             homeListIcon.style.visibility = "hidden";
 
             homeListButton.style.background = null;
             homeListButton.style.border = null;
             homeListButton.style.color = null;
+            homeListButton.style.fontWeight = null;
             homeListButton.childNodes[0].textContent = "Set Home List";
 
             // remove event listeners
             renameListButton.removeEventListener("click", handleClickRenameListButton);
             homeListButton.removeEventListener("click", handleClickHomeListButton);
-            removeListButton.removeEventListener("click", handleClickRemoveListButton);
+            removeListButton.removeEventListener("click", confirmRemoveList);
+            listTitleHeader.removeEventListener("click", handleClickRenameListButton);
 
-            // bandaid solution for now to avoid multiple event listeners for submit
-            // const form = document.querySelector(".add-new-task-form");
-            // const oldSubmitButton = document.querySelector(".submit-new-task-form-button");
-            // form.removeChild(oldSubmitButton);
-            // const newSubmitButton = document.createElement("button");
-            // newSubmitButton.classList.add("submit-new-task-form-button");
-            // newSubmitButton.textContent = "Add";
-            // form.appendChild(newSubmitButton);
+            // avoid multiple event listeners for submit
+            doneButton.removeEventListener("click", handleSubmitEditedList);
+            
 
             if (homeListButton.classList.contains("home-list-updated")) {
                 homeListButton.classList.remove("home-list-updated");
                 displayMyLists();
                 openMyListSettings();
             }
+
+            if (renameListButton.classList.contains("title-updated")) {
+                renameListButton.classList.remove("title-updated");
+                displayMyLists();
+                openMyListSettings();
+            }
+
+            if (document.querySelector(".confirm-remove-container")) {
+                const editListInfo = document.querySelector(".edit-list-info");
+                const confirmRemoveContainer = document.querySelector(".confirm-remove-container");
+                editListInfo.removeChild(confirmRemoveContainer);
+                removeListButton.style.visibility = "visible";
+            }
         })
 
     }
 
-    const handleClickRenameListButton = function() {
+    const handleSubmitEditedList = function(event) {
+        event.preventDefault();
 
+        const dialog = document.getElementById("edit-list-dialog");
+        dialog.close();
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "hidden";
+        const myListsContainer = document.querySelector(".my-lists-container");
+        myListsContainer.style.visibility = "visible";
+
+        const removeListButton = dialog.querySelector(".remove-list-button");
+        const homeListButton = dialog.querySelector(".home-list-button");
+        const renameListButton = dialog.querySelector(".rename-list-button");
+
+        if (homeListButton.classList.contains("home-list-updated")) {
+            homeListButton.classList.remove("home-list-updated");
+        }
+        if (renameListButton.classList.contains("title-updated")) {
+            renameListButton.classList.remove("title-updated");
+        }
+
+        const curListIndex = parseInt(renameListButton.classList[1].substring(5));
+        removeListButton.classList.remove(`index${curListIndex}`);
+        homeListButton.classList.remove(`index${curListIndex}`);
+        renameListButton.classList.remove(`index${curListIndex}`);
+        const homeListIcon = document.querySelector(".home-list-icon");
+        homeListIcon.style.visibility = "hidden";
+
+        homeListButton.style.background = null;
+        homeListButton.style.border = null;
+        homeListButton.style.color = null;
+        homeListButton.style.fontWeight = null;
+        homeListButton.childNodes[0].textContent = "Set Home List";
+
+        renameListButton.removeEventListener("click", handleClickRenameListButton);
+        homeListButton.removeEventListener("click", handleClickHomeListButton);
+        removeListButton.removeEventListener("click", confirmRemoveList);
+        const listTitleHeader = document.querySelector(".edit-list-title");
+        listTitleHeader.removeEventListener("click", handleClickRenameListButton);
+
+        if (document.querySelector(".confirm-remove-container")) {
+            const editListInfo = document.querySelector(".edit-list-info");
+            const confirmRemoveContainer = document.querySelector(".confirm-remove-container");
+            editListInfo.removeChild(confirmRemoveContainer);
+            removeListButton.style.visibility = "visible";
+        }
+
+        displayMyLists();
+    }
+
+    const handleClickRenameListButton = function() {
+        const form = document.querySelector(".edit-list-form");
+        const titleHeader = document.querySelector(".edit-list-title");
+        const originalTitle = titleHeader.textContent;
+
+        const editTitleInput = document.createElement("input");
+        editTitleInput.setAttribute("type", "text");
+        editTitleInput.id = "edit-title-input";
+        editTitleInput.setAttribute("name", "edited-title-input");
+        editTitleInput.value = originalTitle;
+
+        form.insertBefore(editTitleInput, titleHeader);
+        form.removeChild(titleHeader);
+
+        editTitleInput.focus();
+        editTitleInput.select();
+
+        editTitleInput.addEventListener("focusout", () => {
+            const updatedTitle = editTitleInput.value;
+
+            titleHeader.textContent = updatedTitle;
+            form.insertBefore(titleHeader, editTitleInput);
+            form.removeChild(editTitleInput);
+
+            // update actual list in myLists
+            const renameListButton = document.querySelector(".rename-list-button");
+            const curListIndex = parseInt(renameListButton.classList[1].substring(5));
+            console.log(curListIndex);
+            myLists[curListIndex].title = updatedTitle;
+            
+            if (!renameListButton.classList.contains("title-updated")) {
+                renameListButton.classList.add("title-updated");
+            }
+        })
     }
 
     const handleClickHomeListButton = function() {
@@ -898,6 +1000,7 @@ const display = (function() {
             homeListButton.style.background = "linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(77, 139, 190))";
             homeListButton.style.border = "none";
             homeListButton.style.color = "white";
+            homeListButton.style.fontWeight = "600";
             homeListButton.childNodes[0].textContent = "Home List"; // span contains the text
 
             // set this list to index 0 (location for home list) in myLists
@@ -905,6 +1008,41 @@ const display = (function() {
             updateHomeList(curListIndex);
             homeListButton.classList.add("home-list-updated");
         }
+    }
+
+    const confirmRemoveList = function() {
+        const editListInfo = document.querySelector(".edit-list-info");
+        const removeListButton = editListInfo.querySelector(".remove-list-button");
+
+        const confirmRemoveContainer = document.createElement("div");
+        confirmRemoveContainer.classList.add("confirm-remove-container");
+        const confirmRemoveButton = document.createElement("button");
+        confirmRemoveButton.setAttribute("type", "button");
+        confirmRemoveButton.textContent = "Confirm Remove";
+        confirmRemoveContainer.appendChild(confirmRemoveButton);
+        const cancelRemoveButton = document.createElement("button");
+        cancelRemoveButton.textContent = "Cancel";
+        confirmRemoveContainer.appendChild(cancelRemoveButton);
+
+        editListInfo.insertBefore(confirmRemoveContainer, removeListButton);
+        removeListButton.style.visibility = "hidden";
+
+        confirmRemoveButton.addEventListener("click", () => {
+            const editListInfo = document.querySelector(".edit-list-info");
+            const confirmRemoveContainer = document.querySelector(".confirm-remove-container");
+            editListInfo.removeChild(confirmRemoveContainer);
+            const removeListButton = editListInfo.querySelector(".remove-list-button");
+            removeListButton.style.visibility = "visible";
+            handleClickRemoveListButton();
+        })
+
+        cancelRemoveButton.addEventListener("click", () => {
+            const editListInfo = document.querySelector(".edit-list-info");
+            const confirmRemoveContainer = document.querySelector(".confirm-remove-container");
+            editListInfo.removeChild(confirmRemoveContainer);
+            const removeListButton = editListInfo.querySelector(".remove-list-button");
+            removeListButton.style.visibility = "visible";
+        });
     }
 
     const handleClickRemoveListButton = function() {        
