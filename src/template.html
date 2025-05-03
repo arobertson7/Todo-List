@@ -227,6 +227,19 @@
         </form>
     </dialog>
 
+    <dialog id="edit-list-dialog">
+        <form action="" class="edit-list-form">
+            <button type="button" class="close-edit-list-dialog-button">x</button>
+            <h2 class="edit-list-title"><!-- List Title goes here on dialog open --></h2>
+            <div class="edit-list-info">
+                <button type="button" class="rename-list-button">Rename</button>
+                <button type="button" class="home-list-button"><span>Set Home List</span><img class="home-list-icon" src="./home.svg" style="visibility: hidden;"><p class="home-list-selected-text" style="opacity: 0;">Selected</p></button>
+                <button type="button" class="remove-list-button">Remove List</button>
+            </div>
+            <button class="submit-edit-list-button">Done</button>
+        </form>
+    </dialog>
+
     <div class="modal-overlay" style="visibility: hidden;"></div>
 </body>
 </html>

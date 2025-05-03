@@ -4,7 +4,18 @@ import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
 import display from "./display.js";
 export const myLists = [];
-
+export const removeList = function(indexToRemove) {
+    for (let i = indexToRemove + 1; i < myLists.length; i++) {
+        myLists[i - 1] = myLists[i];
+    }
+    myLists.pop();
+}
+// swaps list at 'indexToSwap' with list at index 0, making it the new home list
+export const updateHomeList = function(indexToSwap) {
+    const newHomeList = myLists[indexToSwap];
+    myLists[indexToSwap] = myLists[0];
+    myLists[0] = newHomeList;
+}
 
 display.headerStartup();
 

@@ -314,7 +314,7 @@ nav button {
 
 /************ DIALOG STYLES *************/
 
-#add-new-task-dialog, #edit-task-dialog, #add-new-list-dialog {
+#add-new-task-dialog, #edit-task-dialog, #add-new-list-dialog, #edit-list-dialog {
     position: fixed;
     z-index: 200;
     width: 80%;
@@ -335,7 +335,7 @@ nav button {
     background-color: rgba(0, 0, 0, 0.29);
 }
 
-#add-new-task-dialog form, #edit-task-dialog form, #add-new-list-dialog form {
+#add-new-task-dialog form, #edit-task-dialog form, #add-new-list-dialog form, #edit-list-dialog form {
     width: 100%;
     height: 100%;
     padding-bottom: 40px;
@@ -345,7 +345,7 @@ nav button {
     justify-content: space-between;
 }
 
-.close-dialog-button, .close-edit-dialog-button, .close-new-list-dialog-button {
+.close-dialog-button, .close-edit-dialog-button, .close-new-list-dialog-button, .close-edit-list-dialog-button {
     position: absolute;
     right: 20px;
     width: 8%;
@@ -357,7 +357,7 @@ nav button {
     border: 1px solid black;
 }
 
-.task-info, .edited-task-info {
+.task-info, .edited-task-info, .edit-list-info {
     width: 100%;
     height: 80%;
     display: flex;
@@ -447,7 +447,7 @@ nav button {
     color: rgb(47, 181, 93);
 }
 
-.submit-new-task-form-button, .submit-edited-task-form-button, .submit-new-list-button {
+.submit-new-task-form-button, .submit-edited-task-form-button, .submit-new-list-button, .submit-edit-list-button {
     width: 50%;
     height: 40px;
     background: linear-gradient(to bottom right, white, 0.5%, rgb(25, 97, 199));
@@ -597,6 +597,70 @@ nav button {
     justify-content: center;
     align-items: center;
 
+}
+
+#edit-list-dialog {
+    position: relative;
+    top: 20%;
+    height: 60%;
+}
+
+.edit-list-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 60%;
+    gap: 40px;
+}
+
+.edit-list-info button {
+    /* margin-top: -10px; */
+    /* color: white; */
+    position: relative;
+    width: 60%;
+    height: 15%;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 1.5px 1.5px 5px 1px rgba(0, 0, 0, 0.273);
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.422);
+    font-weight: 600;
+}
+
+.rename-list-button {
+    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(37, 157, 109));
+    color: white;
+    border: none;
+}
+
+.remove-list-button {
+    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(250, 40, 68));
+    color: white;
+    border: none;
+}
+
+.home-list-button {
+    /* background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(77, 139, 190)); */
+    background: white;
+    border: 3px solid rgb(77, 139, 190);
+    color: rgb(77, 139, 190);
+}
+
+.home-list-button p {
+    color: rgb(77, 139, 190);
+    position: absolute;
+    left: -60px;
+    font-size: 0.75rem;
+    text-shadow: none;
+    transition: opacity 1s ease;
+}
+
+.home-list-icon {
+    position: absolute;
+    width: 12%;
+    left: 15px;
 }
 
 /* background: linear-gradient(to bottom right, white, 7%, rgb(25, 97, 199)); */

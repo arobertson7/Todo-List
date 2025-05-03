@@ -1,6 +1,6 @@
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
-import { myLists } from "./index.js";
+import { myLists, removeList, updateHomeList } from "./index.js";
 import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from "./format-date.js";
 import cogIcon from "./cog.svg";
 import whiteCogIcon from "./cog-white.svg";
@@ -41,6 +41,11 @@ const display = (function() {
                     homeImageElement.style.height = "70%";
                     homeImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
                     navButton.appendChild(homeImageElement);
+                    navButton.addEventListener("click", () => {
+                        if (getHomeList()) {
+                            displayList(getHomeList());
+                        }
+                    });
                 }
                 else if (i == 0) {
                     navButton.id = "nav-settings-button";
@@ -74,6 +79,12 @@ const display = (function() {
 
         // initialize priority button transition styles
         initializeDialogButtonTransitionStyles();
+    }
+
+    const getHomeList = function() {
+        if (myLists.length != 0) {
+            return myLists[0];
+        }
     }
 
     const initializeDialogButtonTransitionStyles = function() {
@@ -711,7 +722,39 @@ const display = (function() {
             listCollection.appendChild(listCard);
 
             listCard.addEventListener("click", () => {
-                displayList(myLists[i]);
+                if (!document.querySelector(".edit-list-button")) {
+                    displayList(myLists[i]);
+                }
+            })
+        }
+    }
+
+    const refreshMyLists = function() {
+        const listCollection = document.querySelector(".my-lists");
+        // clear list collection
+        for (let i = listCollection.childNodes.length - 1; i >= 0 ; i--) {
+            listCollection.removeChild(listCollection.childNodes[i]);
+        }
+        // re-add updated cards
+        for (let i = 0; i < myLists.length; i++) {
+            const curList = myLists[i];
+
+            const listCard = document.createElement("div");
+            listCard.classList.add("list-card");
+            const listTitle = document.createElement("h3");
+            listTitle.classList.add("list-card-title");
+            listTitle.textContent = curList.title;
+            listCard.appendChild(listTitle);
+            const progress = document.createElement("p");
+            progress.classList.add("list-progress");
+            progress.textContent = `${curList.getCompleted()} / ${curList.size()} tasks completed`;
+            listCard.appendChild(progress);
+            listCollection.appendChild(listCard);
+
+            listCard.addEventListener("click", () => {
+                if (!document.querySelector(".edit-list-button")) {
+                    displayList(myLists[i]);
+                }
             })
         }
     }
@@ -742,9 +785,12 @@ const display = (function() {
             editListButton.classList.add("edit-list-button");
             editListButton.appendChild(document.createElement("h4"));
             editListButton.childNodes[0].textContent = "Edit";
+            editListButton.addEventListener("click", function () {
+                openEditListDialog(i);
+            })
             const editIconImage = document.createElement("img");
             editIconImage.src = editIcon;
-            editListButton.style.zIndex = "150";
+            editListButton.style.zIndex = "200";
             editListButton.style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
             editIconImage.style.width = "50%";
             editIconImage.style.height = "50%";
@@ -752,8 +798,128 @@ const display = (function() {
             listCards[i].appendChild(editListButton);
         }
 
-        
         cogButton.addEventListener("click", displayMyLists);
+    }
+
+    const openEditListDialog = function(listIndex) {
+        const dialog = document.getElementById("edit-list-dialog");
+        dialog.showModal();
+    
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "visible";
+
+        const myListsContainer = document.querySelector(".my-lists-container");
+        myListsContainer.style.visibility = "hidden";
+
+        const listTitleHeader = document.querySelector(".edit-list-title");
+        listTitleHeader.textContent = myLists[listIndex].title;
+
+        // BUTTONS
+        const renameListButton = dialog.querySelector(".rename-list-button");
+        const homeListButton = dialog.querySelector(".home-list-button");
+        homeListButton.classList.add(`index${listIndex}`);
+        const removeListButton = dialog.querySelector(".remove-list-button");
+        removeListButton.classList.add(`index${listIndex}`);
+
+        if (listIndex == 0) {
+            const homeListIcon = document.querySelector(".home-list-icon");
+            homeListIcon.style.visibility = "visible";
+
+            homeListButton.style.background = "linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(77, 139, 190))";
+            homeListButton.style.border = "none";
+            homeListButton.style.color = "white";
+            homeListButton.childNodes[0].textContent = "Home List"; // span contains the text
+        }
+
+        // EVENT LISTENERS FOR EDITING BUTTONS
+        renameListButton.addEventListener("click", handleClickRenameListButton);
+        homeListButton.addEventListener("click", handleClickHomeListButton);
+        removeListButton.addEventListener("click", handleClickRemoveListButton);
+
+        const closeDialogButton = document.querySelector(".close-edit-list-dialog-button");
+        closeDialogButton.addEventListener("click", () => {
+            dialog.close();
+            overlay.style.visibility = "hidden";
+            myListsContainer.style.visibility = "visible";
+
+            removeListButton.classList.remove(`index${listIndex}`);
+            homeListButton.classList.remove(`index${listIndex}`);
+            const homeListIcon = document.querySelector(".home-list-icon");
+            homeListIcon.style.visibility = "hidden";
+
+            homeListButton.style.background = null;
+            homeListButton.style.border = null;
+            homeListButton.style.color = null;
+            homeListButton.childNodes[0].textContent = "Set Home List";
+
+            // remove event listeners
+            renameListButton.removeEventListener("click", handleClickRenameListButton);
+            homeListButton.removeEventListener("click", handleClickHomeListButton);
+            removeListButton.removeEventListener("click", handleClickRemoveListButton);
+
+            // bandaid solution for now to avoid multiple event listeners for submit
+            // const form = document.querySelector(".add-new-task-form");
+            // const oldSubmitButton = document.querySelector(".submit-new-task-form-button");
+            // form.removeChild(oldSubmitButton);
+            // const newSubmitButton = document.createElement("button");
+            // newSubmitButton.classList.add("submit-new-task-form-button");
+            // newSubmitButton.textContent = "Add";
+            // form.appendChild(newSubmitButton);
+
+            if (homeListButton.classList.contains("home-list-updated")) {
+                homeListButton.classList.remove("home-list-updated");
+                displayMyLists();
+                openMyListSettings();
+            }
+        })
+
+    }
+
+    const handleClickRenameListButton = function() {
+
+    }
+
+    const handleClickHomeListButton = function() {
+        const homeListIcon = document.querySelector(".home-list-icon");
+
+        // if already selected
+        if (homeListIcon.style.visibility == "visible") {
+            const selectedMessage = document.querySelector(".home-list-selected-text");
+            selectedMessage.style.opacity = "1";
+            setTimeout(() => {
+                selectedMessage.style.opacity = "0";
+            }, 1750)
+        }
+        // not yet selected
+        else {
+            // styling change
+            homeListIcon.style.visibility = "visible";
+            const homeListButton = document.querySelector(".home-list-button");
+            homeListButton.style.background = "linear-gradient(to bottom right, rgba(0, 0, 0, 0.198), 5%, rgb(77, 139, 190))";
+            homeListButton.style.border = "none";
+            homeListButton.style.color = "white";
+            homeListButton.childNodes[0].textContent = "Home List"; // span contains the text
+
+            // set this list to index 0 (location for home list) in myLists
+            const curListIndex = parseInt(homeListButton.classList[1].substring(5));
+            updateHomeList(curListIndex);
+            homeListButton.classList.add("home-list-updated");
+        }
+    }
+
+    const handleClickRemoveListButton = function() {        
+        const removeListButton = document.querySelector(".remove-list-button");
+        const indexToRemove = parseInt(removeListButton.classList[1].substring(5));
+        removeList(indexToRemove); // function from display.js
+
+        removeListButton.classList.remove(`index${indexToRemove}`);
+        removeListButton.removeEventListener("click", handleClickRemoveListButton);
+        displayMyLists();
+
+        const dialog = document.getElementById("edit-list-dialog");
+        dialog.close();
+        const overlay = document.querySelector(".modal-overlay");
+        overlay.style.visibility = "hidden";
     }
 
     const handleCreateNewList = function(event) {
