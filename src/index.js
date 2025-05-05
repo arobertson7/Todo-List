@@ -1,56 +1,53 @@
 import "./styles.css";
-
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
 import display from "./display.js";
-export const myLists = [];
+import storageHandler from "./storage.js";
 export const removeList = function(indexToRemove) {
     for (let i = indexToRemove + 1; i < myLists.length; i++) {
         myLists[i - 1] = myLists[i];
     }
     myLists.pop();
+    storageHandler.updateLocalStorage();
 }
 // swaps list at 'indexToSwap' with list at index 0, making it the new home list
 export const updateHomeList = function(indexToSwap) {
     const newHomeList = myLists[indexToSwap];
     myLists[indexToSwap] = myLists[0];
     myLists[0] = newHomeList;
+    storageHandler.updateLocalStorage();
 }
 
+/*
+************************************************************************************
+START SCRIPT
+*/
+
+export const myLists = [];
+
 display.headerStartup();
+storageHandler.retrieveMyLists();
+let homeList = myLists[0];
+display.displayList(homeList);
 
-const piano = new Todo("Play piano", "today we need to practice piano for 4 hours");
-const sing = new Todo("Sing forever");
-const eat = new Todo("Eat", "we must eat", "2025-4-28", 1)
-const defaultList = new TodoList("Today's To-dos");
-defaultList.add(piano);
-defaultList.add(sing);
-defaultList.add(eat);
+// const task1 = new Todo("Task 1", "Something to do", "2025-6-16", 2);
+// const task2 = new Todo("Task 2", "Something else to do", "2025-6-16", 2);
+// const task3 = new Todo("Task 3", "Something further to do", "2025-6-16", 2);
 
-myLists.push(defaultList);
 
-display.displayList(defaultList);
 
-// // display.clearListDisplay();
+// const toDoList = new TodoList("todoList");
+// toDoList.add(task1);
+// toDoList.add(task2);
+// toDoList.add(task3);
 
-// const header = document.getElementById("header");
-// header.addEventListener("click", () => {
-//     console.log(defaultList.list);
-// })
+// const secondToDoList = new TodoList("secondToDoList");
+// secondToDoList.add(task2);
+// secondToDoList.add(task3);
 
-const list2 = new TodoList("List 2");
+// const thirdToDoList = new TodoList("thirdToDoList");
+// thirdToDoList.add(task2);
 
-const guitar = new Todo("Play guitar", "today we need to practice guitar for 3 hours");
-const german = new Todo("Speak some german");
-const code = new Todo("Code", "we must code", "2025-7-8", 1)
-
-list2.add(guitar);
-list2.add(german);
-list2.add(code);
-
-myLists.push(list2);
-
-const list3 = new TodoList("List 3");
-const list4 = new TodoList("List 4");
-myLists.push(list3);
-
+// myLists.push(toDoList);
+// myLists.push(secondToDoList);
+// myLists.push(thirdToDoList);

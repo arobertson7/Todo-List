@@ -9,6 +9,7 @@ import tuneIcon from "./tune.svg";
 import downArrowIcon from "./down-arrow-icon.svg";
 import upArrowIcon from "./up-arrow-icon.svg";
 import editIcon from "./edit-icon.svg";
+import storageHandler from "./storage.js";
 
 const display = (function() {
     
@@ -627,6 +628,7 @@ const display = (function() {
             thisList.list[taskIndex].completed = false;
             hideAndResetCompletedStatusField();
         }
+        storageHandler.updateLocalStorage();
 
         // reset form, close modal, and refresh list
         const editsForm = document.querySelector(".edit-task-form");
@@ -972,8 +974,8 @@ const display = (function() {
             // update actual list in myLists
             const renameListButton = document.querySelector(".rename-list-button");
             const curListIndex = parseInt(renameListButton.classList[1].substring(5));
-            console.log(curListIndex);
-            myLists[curListIndex].title = updatedTitle;
+            // myLists[curListIndex].title = updatedTitle;
+            myLists[curListIndex].setTitle(updatedTitle);
             
             if (!renameListButton.classList.contains("title-updated")) {
                 renameListButton.classList.add("title-updated");
@@ -1066,6 +1068,7 @@ const display = (function() {
         const newListTitle = document.getElementById("new-list-title").value;
         const newList = new TodoList(newListTitle);
         myLists.push(newList);
+        storageHandler.updateLocalStorage();
 
         // reset form, close modal, and refresh myLists page
         const form = document.querySelector(".add-new-list-form");

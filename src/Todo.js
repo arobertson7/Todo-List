@@ -1,4 +1,5 @@
 import { getTodaysDate } from "./format-date.js";
+import storageHandler from "./storage.js";
 
 class Todo {
     title; // string
@@ -17,6 +18,7 @@ class Todo {
 
     setCompleted() {
         this.completed = true;
+        storageHandler.updateLocalStorage();
     }
 
 };

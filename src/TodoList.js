@@ -1,11 +1,11 @@
 // import Todo from "./Todo.js"
 import { formatDateYYYYMMDD } from "./format-date.js"
+import storageHandler from "./storage.js";
 
 class TodoList {
     title // string
     // description; // string
     list = []; // array of Todo objects
-    finalDueDate; // ? for now a string
 
     constructor(title) {
         this.title = title;
@@ -20,6 +20,11 @@ class TodoList {
         this.title = title;
     }
 
+    setTitle(title) {
+        this.title = title;
+        storageHandler.updateLocalStorage();
+    }
+
     // get description() {
     //     return this.description;
     // }
@@ -32,14 +37,11 @@ class TodoList {
         return this.list;
     }
 
-    get finalDueDate() {
-        return this.finalDueDate;
-    }
-
     // methods
     // add a new todo
     add(Todo) {
         this.list.push(Todo);
+        storageHandler.updateLocalStorage();
     }
 
     // remove a todo
@@ -111,6 +113,7 @@ class TodoList {
                 }
             }
         }
+        storageHandler.updateLocalStorage();
     }
 
     // sorts the list by dueDate using insertion sort
@@ -159,6 +162,7 @@ class TodoList {
                 }
             }
         }
+        storageHandler.updateLocalStorage();
     }
 
     // sorts the list by completed status with 2 passes
@@ -198,6 +202,7 @@ class TodoList {
 
         // copy result back to actual list
         this.list = result;
+        storageHandler.updateLocalStorage();
     }
     
  };
