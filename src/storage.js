@@ -55,13 +55,13 @@ const storageHandler = (function() {
         return realTodo;
     }
 
-    // returns the name of the selected wallpaper if found, else returns 'Berlin' as default
+    // returns the name of the selected wallpaper if found, else returns 'Eiffel Tower' as default
     const retrieveSelectedWallpaper = function() {
         if (localStorage.getItem('curWallpaper')) {
             return localStorage.getItem('curWallpaper');
         }
         else {
-            return "Berlin";
+            return "Eiffel Tower";
         }
     }
 

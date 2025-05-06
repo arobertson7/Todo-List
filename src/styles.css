@@ -141,11 +141,11 @@ nav button {
 
 .list-container {
     box-shadow: inset 1px 1px 5px 1px rgba(0, 0, 0, 0.482);
-    padding: 8px 5px 17px 5px;
+    padding: 0px 0px 17px 0px;
     background-color: rgba(255, 255, 255, 0.885);
     width: 80%;
     height: 70%;
-    border-radius: 20px;
+    border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -153,11 +153,17 @@ nav button {
 }
 
 .list-container > h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 800;
-    width: 90%;
+    width: 100%;
+    padding: 8px;
     text-align: center;
-    border-bottom: 2px solid black;
+    border-radius: 25px 25px 0px 0px;
+    /* border-bottom: 1px solid black; */
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.343);
+    background-color: rgb(25, 97, 199);
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.258);
 }
 
 .list-options {
