@@ -55,7 +55,17 @@ const storageHandler = (function() {
         return realTodo;
     }
 
-    return { updateLocalStorage, retrieveMyLists };
+    // returns the name of the selected wallpaper if found, else returns 'Berlin' as default
+    const retrieveSelectedWallpaper = function() {
+        if (localStorage.getItem('curWallpaper')) {
+            return localStorage.getItem('curWallpaper');
+        }
+        else {
+            return "Berlin";
+        }
+    }
+
+    return { updateLocalStorage, retrieveMyLists, retrieveSelectedWallpaper };
 })();
 
 export default storageHandler;

@@ -1,6 +1,6 @@
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
-import { myLists, removeList, updateHomeList } from "./index.js";
+import { myLists, removeList, updateHomeList, wallpapersList } from "./index.js";
 import { formatDateFromInput, formatDateYYYYMMDD, formatDueDateForDisplay } from "./format-date.js";
 import cogIcon from "./cog.svg";
 import whiteCogIcon from "./cog-white.svg";
@@ -12,7 +12,7 @@ import editIcon from "./edit-icon.svg";
 import storageHandler from "./storage.js";
 
 const display = (function() {
-    
+
     const headerStartup = function() {
         const header = document.getElementById("header");
         const message = document.createElement("h1");
@@ -56,6 +56,7 @@ const display = (function() {
                     tuneImageElement.style.height = "60%";
                     tuneImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
                     navButton.appendChild(tuneImageElement);
+                    navButton.addEventListener("click", displaySettings);
                 }
                 else if (i == 2) {
                     navButton.id = "nav-my-lists-button";
@@ -81,6 +82,125 @@ const display = (function() {
         // initialize priority button transition styles
         initializeDialogButtonTransitionStyles();
     }
+    
+    // const displayHeaderMessage = function(displayMessage) {
+    //     const header = document.getElementById("header");
+    //     let clock = 0;
+
+    //     const message = document.createElement("h1");
+    //     message.textContent = displayMessage;
+
+    //     // to ensure the dialog buttons below only get initialized once
+    //     let dialogButtonsInitialized = true;
+
+    //     if (document.getElementById("nav")) {
+    //         // CASE 1: NAV EXISTS - FADE BUTTONS OUT, MESSAGE IN
+
+    //         // fade buttons out
+    //         const navButtons = document.getElementById("nav").childNodes;
+    //         for (let i = 0; i < navButtons.length; i++) {
+    //             navButtons[i].style.opacity = "0";
+    //         }
+
+    //         // remove nav after fade finishes
+    //         clock += 1000;
+    //         message.style.opacity = "0";
+    //         message.classList.add("header-message-fade");
+    //         setTimeout(() => {
+    //             header.removeChild(document.getElementById("nav"));
+    //             // fade message in
+    //             header.appendChild(message);
+    //         }, clock);
+
+    //         clock += 20;
+    //         setTimeout(() => {
+    //             message.style.opacity = "1";
+    //         }, clock);
+
+    //         clock -= 300;
+    //     }
+    //     else {
+    //         // CASE 2: PAGE LOAD - DISPLAY MESSAGE RIGHT AWAY
+    //         header.appendChild(message);
+
+    //         // do we don't fade message right as page loads
+    //         setTimeout(() => {
+    //             message.classList.add("header-message-fade");
+    //         }, 1000);
+
+    //         dialogButtonsInitialized = false;
+    //     }
+
+
+
+    //     // MESSAGE FADE OUT, BUTTONS FADE IN
+    //     clock += 1500;
+    //     // fade message out
+    //     setTimeout(() => {
+    //         message.style.opacity = "0";
+    //     }, clock);
+    
+    //     clock += 1000
+    //     // replace message with nav
+    //     setTimeout(() => {
+    //         const nav = document.createElement("nav");
+    //         nav.id = "nav";
+    //         for (let i = 0; i < 3; i++) {
+    //             const navButton = document.createElement("button");
+    //             navButton.style.opacity = "0";
+    //             nav.appendChild(navButton);
+    //             if (i == 1) {
+    //                 navButton.id = "nav-home-button";
+    //                 const homeImageElement = document.createElement("img");
+    //                 homeImageElement.src = homeIcon;
+    //                 homeImageElement.style.width = "70%";
+    //                 homeImageElement.style.height = "70%";
+    //                 homeImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
+    //                 navButton.appendChild(homeImageElement);
+    //                 navButton.addEventListener("click", () => {
+    //                     if (getHomeList()) {
+    //                         displayList(getHomeList());
+    //                     }
+    //                     displayHeaderMessage("Home List");
+    //                 });
+    //             }
+    //             else if (i == 0) {
+    //                 navButton.id = "nav-settings-button";
+    //                 const tuneImageElement = document.createElement("img");
+    //                 tuneImageElement.src = tuneIcon;
+    //                 tuneImageElement.style.width = "60%";
+    //                 tuneImageElement.style.height = "60%";
+    //                 tuneImageElement.style.filter = "drop-shadow(1.5px 1.5px 1px rgb(0 0 0 / 0.4))";
+    //                 navButton.appendChild(tuneImageElement);
+    //                 navButton.addEventListener("click", displaySettings);
+    //             }
+    //             else if (i == 2) {
+    //                 navButton.id = "nav-my-lists-button";
+    //                 const myListsText = document.createElement("p");
+    //                 myListsText.textContent = "My Lists";
+    //                 navButton.appendChild(myListsText);
+    //                 navButton.addEventListener("click", displayMyLists);
+    //             }
+    //         }
+    
+    //         header.removeChild(message);
+    //         header.appendChild(nav);
+    //     }, clock);
+    
+    //     clock += 20;
+    //     // fade nav in
+    //     setTimeout(() => {
+    //         for (let j = 0; j < 3; j++) {
+    //             nav.childNodes[j].style.opacity = "1";
+    //         }
+    //     }, clock);
+
+
+    //     if (!dialogButtonsInitialized) {
+    //         // initialize priority button transition styles
+    //         initializeDialogButtonTransitionStyles();
+    //     }
+    // }
 
     const getHomeList = function() {
         if (myLists.length != 0) {
@@ -1177,6 +1297,68 @@ const display = (function() {
         completedCheckMark.classList.add("completed-check-mark");
         completedCheckMark.textContent = "✓";
         card.insertBefore(completedCheckMark, card.querySelector(".edit-button"));
+    }
+
+    const displaySettings = function() {
+        clearContent();
+
+        const content = document.getElementById("content");
+        const settingsContainer = document.createElement("div");
+        settingsContainer.classList.add("settings-container");
+        content.appendChild(settingsContainer);
+
+        const wallpapersSection = document.createElement("div");
+        wallpapersSection.classList.add("wallpapers-section");
+        settingsContainer.appendChild(wallpapersSection);
+        const wallpaperCollectionTitle = document.createElement("h3");
+        wallpaperCollectionTitle.textContent = "Wallpaper";
+        wallpapersSection.appendChild(wallpaperCollectionTitle);
+
+        const wallpapersCollection = document.createElement("div");
+        wallpapersCollection.classList.add("wallpapers-collection");
+        wallpapersSection.appendChild(wallpapersCollection);
+
+        /////////////////////////////////
+
+        for (let i = 0; i < wallpapersList.length; i++) {
+            const wallpaperContainer = document.createElement("div");
+            wallpaperContainer.classList.add("wallpaper");
+            const wallpaperImage = document.createElement("img");
+            wallpaperImage.src = wallpapersList[i][1];
+            wallpaperContainer.appendChild(wallpaperImage);
+            const wallpaperName = document.createElement("p");
+            wallpaperName.textContent = wallpapersList[i][0];
+            wallpaperContainer.appendChild(wallpaperName);
+
+            wallpaperContainer.addEventListener("click", updateWallpaper);
+            wallpapersCollection.appendChild(wallpaperContainer);
+
+            // highlight current wallpaper on preferences display
+            const selectedWallpaperName = storageHandler.retrieveSelectedWallpaper();
+            if (wallpapersList[i][0] == selectedWallpaperName) {
+                wallpaperContainer.classList.add("selected-wallpaper");
+            }
+        }
+    }
+
+    // 'this' refers to the wallpaperContainer div holding the wallpaper image and name
+    const updateWallpaper = function() {
+        const wallpaperName = this.childNodes[1].textContent;
+        const wallpaperImage = this.childNodes[0].src;
+
+        // set background
+        const background = document.querySelector(".background");
+        background.style.background = `url(${wallpaperImage})`;
+        background.style.backgroundSize = "cover";
+        background.style.backgroundPosition = "center";
+
+        // change selected wallpaper on preferences display
+        const oldWallpaper = document.querySelector(".selected-wallpaper");
+        oldWallpaper.classList.remove("selected-wallpaper");
+        this.classList.add("selected-wallpaper");
+
+        // update selected wallpaper in localStorage (key is wallpaper name)
+        localStorage.setItem('curWallpaper', wallpaperName);
     }
 
     return {headerStartup, displayList};

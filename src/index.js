@@ -18,6 +18,35 @@ export const updateHomeList = function(indexToSwap) {
     storageHandler.updateLocalStorage();
 }
 
+// Wallpapers
+import nycImage from "./nyc.jpg";
+import berlinImage from "./berlin.jpg";
+import californiaImage from "./cali.jpg";
+import switzerlandImage from "./switzerland.jpg";
+import parisImage from "./paris.jpg";
+import netherlandsImage from "./netherlands.jpg";
+import parisImage2 from "./paris2.jpg";
+export const wallpapersList = [["New York City", nycImage], ["Paris", parisImage2], ["California", californiaImage],
+                                ["The Netherlands", netherlandsImage], ["Eiffel Tower", parisImage],
+                                ["Switzerland", switzerlandImage], ["Berlin", berlinImage]];
+
+
+const loadWallpaper = function() {
+    const selectedWallpaperName = storageHandler.retrieveSelectedWallpaper();
+    // locate in wallpapersList array
+    let index = 0;
+    while (index < wallpapersList.length && wallpapersList[index][0] != selectedWallpaperName) {
+        index++;
+    }
+    const wallpaperImage = wallpapersList[index][1];
+
+    // set as background
+    const background = document.querySelector(".background");
+    background.style.background = `url(${wallpaperImage})`;
+    background.style.backgroundSize = "cover";
+    background.style.backgroundPosition = "center";
+}
+
 /*
 ************************************************************************************
 START SCRIPT
@@ -26,6 +55,7 @@ START SCRIPT
 export const myLists = [];
 
 display.headerStartup();
+loadWallpaper();
 storageHandler.retrieveMyLists();
 let homeList = myLists[0];
 display.displayList(homeList);

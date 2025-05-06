@@ -87,6 +87,10 @@ header {
     box-shadow: 1.5px 1.5px 5px 2px rgba(0, 0, 0, 0.372);
 }
 
+/* .header-message-fade {
+    transition: opacity 1s ease-in;
+} */
+
 header h1 {
     /* fade out after page load */
     transition: opacity 1s ease-in;
@@ -130,7 +134,7 @@ nav button {
     justify-content: center;
     align-items: center;
     position: relative;
-    top: 90px;
+    top: 80px;
     width: 100%;
     height: auto;
 }
@@ -210,15 +214,15 @@ nav button {
 .todo {
     position: relative;
     height: 250px;
-    padding: 0px 5px 5px 5px;
+    padding: 10px 5px 5px 5px;
     background-color: white;
     border: 2px solid rgba(0, 0, 0, 0.536);
     border-radius: 20px;
     display: grid;
     justify-items: center;
-    align-items: center;
+    align-items: start;
     grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 2fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     row-gap: 20px;
 }
 
@@ -227,7 +231,7 @@ nav button {
     grid-row: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 .todo-title {
@@ -285,13 +289,21 @@ nav button {
     padding: 0px 10px;
 }
 
+.todo-description {
+    align-self: center;
+    /* width: 100%;
+    height: 100%; */
+    /* border: 1px solid black; */
+}
+
 .completed-button {
     border-radius: 20px;
     width: 100%;
-    height: 70%;
+    height: 50%;
     grid-column: 2;
     grid-row: 3;
     font-size: 0.7rem;
+    margin-top: 10%;
 }
 
 .completed-check-mark {
@@ -463,10 +475,10 @@ nav button {
 
 .my-lists-container {
     position: relative;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.885);
     width: 90%;
     height: auto;
-    padding: 10px 0px;
+    padding: 10px 10px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -488,12 +500,12 @@ nav button {
 
 .list-card {
     position: relative;
-    background: linear-gradient(to bottom right, white, 7%, rgb(25, 97, 199));
-    color: white;
+    background: linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, white);
+    /* color: white; */
     height: 150px;
     border-radius: 20px;
     padding: 0px 10px;
-    border: 2px solid rgb(25, 97, 199);
+    /* border: 2px solid rgb(25, 97, 199); */
     border-bottom: none;
     display: flex;
     flex-direction: column;
@@ -501,20 +513,25 @@ nav button {
     text-align: center;
     gap: 40px;
     font-size: 0.8rem;
-    box-shadow: inset 1px 1px 5px 1px rgba(0, 0, 0, 0.482);
+    box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.4);
+}
+
+.my-list-options {
+    border-bottom: 2px solid black;
 }
 
 .list-card h3 {
-    border-radius: 20px 20px 10px 10px;
+    border-radius: 20px 20px 0px 0px;
+    border-bottom: 1px solid black;
     padding: 3px;
     width: calc(100% + 20px);
-    color: rgba(0, 0, 0, 0.677);
-    /* background-color: white; */
-    background: linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, white);
+    color: white;
+    background-color: rgb(25, 97, 199);
+    /* background: linear-gradient(to bottom right, white, 7%, rgb(25, 97, 199)); */
 }
 
 .list-card p {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.767);
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.767); */
     font-weight: 600;
 }
 
@@ -696,5 +713,85 @@ nav button {
     outline: none;
 }
 
-/* background: linear-gradient(to bottom right, white, 7%, rgb(25, 97, 199)); */
-/* rgb(25, 97, 199) */
+/*********** Settings Page ***********/
+
+.settings-container {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.732);
+    color: white;
+    width: 90%;
+    height: auto;
+    padding: 20px 0px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    box-shadow: inset 1px 1px 5px 1px rgba(0, 0, 0, 0.482);
+}
+
+.wallpapers-section {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border-radius: 20px;
+}
+
+.wallpapers-section h3 {
+    width: 80%;
+    color: rgba(0, 0, 0, 0.757);
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.wallpapers-collection {
+    width: 100%;
+    height: 100%;
+    gap: 30px;
+    padding: 20px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(auto-fit, 1fr);
+    /* background-color: rgb(0, 0, 0); */
+    border-radius: 20px;
+}
+
+.wallpaper {
+    position: relative;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.wallpaper img {
+    height: 250px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px 3px rgba(0, 0, 0, 0.304);
+    transition: outline 0.3s ease;
+    outline: 1.7px solid rgba(255, 255, 255, 0.752);
+}
+
+.wallpaper p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.selected-wallpaper img {
+    outline: 6px solid rgb(25, 97, 199);
+}
+
+.selected-wallpaper p {
+    position: relative;
+    top: 4px;
+    /* color: rgb(25, 97, 199); */
+    text-shadow: 0px 0px 5px rgb(25, 97, 199);
+}
