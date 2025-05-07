@@ -152,7 +152,7 @@ nav button {
     gap: 20px;
 }
 
-.list-container > h2 {
+.list-header {
     font-size: 1.4rem;
     font-weight: 800;
     width: 100%;
@@ -526,7 +526,7 @@ nav button {
     border-bottom: 2px solid black;
 }
 
-.list-card h3 {
+.list-card-title {
     border-radius: 20px 20px 0px 0px;
     border-bottom: 1px solid black;
     padding: 3px;
@@ -607,7 +607,8 @@ nav button {
 }
 
 .edit-list-button {
-    background-color: white;
+    background-color: rgba(25, 97, 199, 0.87);
+    color: white;
     position: absolute;
     top: 35%;
     left: 25%;
@@ -619,7 +620,7 @@ nav button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    border: none;
 }
 
 #edit-list-dialog {

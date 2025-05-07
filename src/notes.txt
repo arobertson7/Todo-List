@@ -1,0 +1,4 @@
+LAST THING FOR LIST COLORS
+just make sure to remove the pair from the map
+once a list is removed from myLists
+

@@ -1,3 +1,4 @@
+import { listColorMap } from "./display.js";
 import { myLists } from "./index.js";
 import Todo from "./Todo.js";
 import TodoList from "./TodoList.js";
@@ -65,7 +66,20 @@ const storageHandler = (function() {
         }
     }
 
-    return { updateLocalStorage, retrieveMyLists, retrieveSelectedWallpaper };
+    // return the stored listColorMap if present, otherwise return empty array
+    const retrieveListColorMap = function() {
+        if (localStorage.getItem('listColorMap')) {
+            let theMap = JSON.parse(localStorage.getItem('listColorMap'));
+            return theMap;
+        }
+        return [];
+    }
+
+    const updateListColorMap = function() {
+        localStorage.setItem('listColorMap', JSON.stringify(listColorMap));
+    }
+
+    return { updateLocalStorage, retrieveMyLists, retrieveSelectedWallpaper, retrieveListColorMap, updateListColorMap };
 })();
 
 export default storageHandler;

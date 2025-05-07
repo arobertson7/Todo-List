@@ -26,8 +26,8 @@ import switzerlandImage from "./switzerland.jpg";
 import parisImage from "./paris.jpg";
 import netherlandsImage from "./netherlands.jpg";
 import parisImage2 from "./paris2.jpg";
-export const wallpapersList = [["New York City", nycImage], ["Paris", parisImage2], ["California", californiaImage],
-                                ["The Netherlands", netherlandsImage], ["Eiffel Tower", parisImage],
+export const wallpapersList = [["Eiffel Tower", parisImage], ["New York City", nycImage], ["California", californiaImage],
+                                ["The Netherlands", netherlandsImage], ["Paris", parisImage2],
                                 ["Switzerland", switzerlandImage], ["Berlin", berlinImage]];
 
 
@@ -47,6 +47,7 @@ const loadWallpaper = function() {
     background.style.backgroundPosition = "center";
 }
 
+
 /*
 ************************************************************************************
 START SCRIPT
@@ -60,24 +61,9 @@ storageHandler.retrieveMyLists();
 let homeList = myLists[0];
 display.displayList(homeList);
 
-// const task1 = new Todo("Task 1", "Something to do", "2025-6-16", 2);
-// const task2 = new Todo("Task 2", "Something else to do", "2025-6-16", 2);
-// const task3 = new Todo("Task 3", "Something further to do", "2025-6-16", 2);
-
-
-
-// const toDoList = new TodoList("todoList");
-// toDoList.add(task1);
-// toDoList.add(task2);
-// toDoList.add(task3);
-
-// const secondToDoList = new TodoList("secondToDoList");
-// secondToDoList.add(task2);
-// secondToDoList.add(task3);
-
-// const thirdToDoList = new TodoList("thirdToDoList");
-// thirdToDoList.add(task2);
-
-// myLists.push(toDoList);
-// myLists.push(secondToDoList);
-// myLists.push(thirdToDoList);
+if (document.querySelector(".empty-list-message")) {
+    const openingMessage = document.querySelector(".empty-list-message");
+    openingMessage.textContent = "Add a new task and get started!";
+    openingMessage.style.fontSize = "1.2rem";
+    openingMessage.style.fontWeight = "500";
+}

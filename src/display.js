@@ -11,6 +11,13 @@ import upArrowIcon from "./up-arrow-icon.svg";
 import editIcon from "./edit-icon.svg";
 import storageHandler from "./storage.js";
 
+export let listColorMap = [];
+
+const listColorOptions = ["rgba(29, 150, 45, 0.87)", "rgba(187, 27, 81, 0.87)", "rgba(23, 130, 144, 0.87)",
+    "rgba(110, 64, 163, 0.87)", "rgba(23, 144, 124, 0.87)", "rgba(25, 97, 199, 0.87)", "rgba(202, 37, 37, 0.87)",
+    "rgba(161, 64, 163, 0.87)", "rgba(21, 96, 143, 0.87)", "rgba(236, 153, 0, 0.87)"
+]
+
 const display = (function() {
 
     const headerStartup = function() {
@@ -208,6 +215,28 @@ const display = (function() {
         }
     }
 
+    const getListColor = function(listName) {
+        // if color for this list is set, return it
+        listColorMap = storageHandler.retrieveListColorMap();
+        let mapIndex = 0;
+        while (mapIndex < listColorMap.length && listColorMap[mapIndex][0] != listName) {
+            mapIndex++;
+        }
+
+        if (mapIndex != listColorMap.length) {
+            return listColorMap[mapIndex][1];
+        }
+        // else return next unused list color in listColorOptions
+        else {
+            const nextUnusedColorIndex = listColorMap.length % listColorOptions.length;
+            const listColor = listColorOptions[nextUnusedColorIndex];
+            listColorMap.push([listName, listColor]);
+            storageHandler.updateListColorMap();
+
+            return listColor;
+        }
+    }
+
     const initializeDialogButtonTransitionStyles = function() {
         // style add task priority buttons
         const addTaskPriorityButtons = document.querySelectorAll(".styled-priority-button");
@@ -320,7 +349,9 @@ const display = (function() {
         content.appendChild(listContainer);
     
         const title = document.createElement("h2");
+        title.classList.add('list-header');
         title.textContent = thisList.title;
+        title.style.backgroundColor = getListColor(thisList.title);
         listContainer.appendChild(title);
     
         const listOptions = document.createElement("div");
@@ -835,6 +866,7 @@ const display = (function() {
             listCard.classList.add("list-card");
             const listTitle = document.createElement("h3");
             listTitle.classList.add("list-card-title");
+            listTitle.style.backgroundColor = getListColor(curList.title);
             listTitle.textContent = curList.title;
             listCard.appendChild(listTitle);
             const progress = document.createElement("p");
@@ -896,9 +928,8 @@ const display = (function() {
             listCards[i].style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
             listCards[i].removeChild(listCards[i].childNodes[1]);
             listCards[i].childNodes[0].style.zIndex = "150";
-            listCards[i].childNodes[0].style.background = "linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, rgba(255, 255, 255, 0.8))";
+            // listCards[i].childNodes[0].style.background = "linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, rgba(255, 255, 255, 0.8))";
             myListContainer.childNodes[0].textContent = "Edit";
-            myListContainer.childNodes[0].style.borderBottom = "2px solid black";
             myListContainer.childNodes[0].style.padding = "0px 22px";
             const newListButton = document.querySelector(".new-list-button");
             newListButton.style.visibility = "hidden";
