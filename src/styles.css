@@ -603,7 +603,7 @@ nav button {
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.33);
+    background-color: rgba(0, 0, 0, 0.449);
 }
 
 .edit-list-button {
@@ -620,7 +620,7 @@ nav button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.552);
 }
 
 #edit-list-dialog {

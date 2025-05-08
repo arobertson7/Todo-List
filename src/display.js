@@ -13,9 +13,9 @@ import storageHandler from "./storage.js";
 
 export let listColorMap = [];
 
-const listColorOptions = ["rgba(29, 150, 45, 0.87)", "rgba(187, 27, 81, 0.87)", "rgba(23, 130, 144, 0.87)",
-    "rgba(110, 64, 163, 0.87)", "rgba(23, 144, 124, 0.87)", "rgba(25, 97, 199, 0.87)", "rgba(202, 37, 37, 0.87)",
-    "rgba(161, 64, 163, 0.87)", "rgba(21, 96, 143, 0.87)", "rgba(236, 153, 0, 0.87)"
+const listColorOptions = ["rgba(23, 144, 124, 0.87)", "rgba(161, 64, 163, 0.87)", "rgba(25, 97, 199, 0.87)",
+    "rgba(187, 27, 81, 0.87)", "rgba(23, 130, 144, 0.87)", "rgba(110, 64, 163, 0.87)", "rgba(29, 150, 45, 0.87)",
+    "rgba(202, 37, 37, 0.87)", "rgba(21, 96, 143, 0.87)", "rgba(236, 153, 0, 0.87)"
 ]
 
 const display = (function() {
@@ -927,8 +927,6 @@ const display = (function() {
             listCards[i].appendChild(overlay);
             listCards[i].style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
             listCards[i].removeChild(listCards[i].childNodes[1]);
-            listCards[i].childNodes[0].style.zIndex = "150";
-            // listCards[i].childNodes[0].style.background = "linear-gradient(to bottom right, rgba(85, 85, 85, 0.356), 0.7%, rgba(255, 255, 255, 0.8))";
             myListContainer.childNodes[0].textContent = "Edit";
             myListContainer.childNodes[0].style.padding = "0px 22px";
             const newListButton = document.querySelector(".new-list-button");
@@ -938,6 +936,8 @@ const display = (function() {
             editListButton.classList.add("edit-list-button");
             editListButton.appendChild(document.createElement("h4"));
             editListButton.childNodes[0].textContent = "Edit";
+            // editListButton.childNodes[0].style.textShadow = "0.5px 0.5px 1px rgba(0, 0, 0, 0.43)";
+            editListButton.childNodes[0].style.color = "rgb(25, 97, 199)";
             editListButton.addEventListener("click", function () {
                 openEditListDialog(i);
             })
@@ -945,6 +945,12 @@ const display = (function() {
             editIconImage.src = editIcon;
             editListButton.style.zIndex = "200";
             editListButton.style.boxShadow = "2px 2px 4px 2px rgba(0, 0, 0, 0.4)";
+            editListButton.style.opacity = "0";
+            editListButton.style.transition = "opacity 0.12s ease-in";
+            editListButton.style.background = "white";
+            setTimeout(() => {
+                editListButton.style.opacity = "1";
+            }, 50);
             editIconImage.style.width = "50%";
             editIconImage.style.height = "50%";
             editListButton.appendChild(editIconImage);
