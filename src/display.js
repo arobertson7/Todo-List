@@ -10,6 +10,7 @@ import downArrowIcon from "./down-arrow-icon.svg";
 import upArrowIcon from "./up-arrow-icon.svg";
 import editIcon from "./edit-icon.svg";
 import checkmarkIcon from "./checkmark.svg";
+import uncheckedMarkIcon from "./unchecked-mark.svg";
 import storageHandler from "./storage.js";
 
 export let listColorMap = [];
@@ -22,18 +23,25 @@ const listColorOptions = ["rgba(23, 144, 124, 0.87)", "rgba(161, 64, 163, 0.87)"
 const display = (function() {
 
     const headerStartup = function() {
+        const content = document.getElementById("content");
+        if (content.classList.contains('first-visit')) {
+            content.style.opacity = "0";
+            setTimeout(() => {
+                content.classList.add("first-visit-content-fade-in");
+            }, 700);
+        }
         const header = document.getElementById("header");
         const message = document.createElement("h1");
         message.textContent = "A busy day is a good day";
         header.appendChild(message);
     
-        let clock = 1500;
+        let clock = 1000;
         // fade message out
         setTimeout(() => {
             message.style.opacity = "0";
         }, clock);
     
-        clock += 1000
+        clock += 700
         // replace message with nav
         setTimeout(() => {
             const nav = document.createElement("nav");
@@ -84,6 +92,14 @@ const display = (function() {
         setTimeout(() => {
             for (let j = 0; j < 3; j++) {
                 nav.childNodes[j].style.opacity = "1";
+            }
+            if (content.classList.contains('first-visit')) {
+                content.style.opacity = "1";
+                content.classList.remove('first-visit');
+                setTimeout(() => {
+                    content.classList.remove('first-visit-content-fade-in');
+                }, 700);
+                localStorage.setItem('firstVisitCompleted', 'true');
             }
         }, clock);
 
@@ -298,32 +314,27 @@ const display = (function() {
                 }
             })
         }
+    }
 
-        // style edited completed status buttons
-        const completedButton = document.querySelector(".styled-edited-completed-button");
-        const incompleteButton = document.querySelector(".styled-edited-incomplete-button");
-        completedButton.addEventListener("click", () => {
-            completedButton.style.backgroundColor = "rgb(47, 181, 93)";
-            completedButton.childNodes[1].style.color = "white";
-            completedButton.childNodes[0].setAttribute('checked', 'checked');
-
-            incompleteButton.style.backgroundColor = "white";
-            incompleteButton.childNodes[1].style.color = "rgb(47, 181, 93)";
-            if (incompleteButton.childNodes[0].hasAttribute('checked')) {
-                incompleteButton.childNodes[0].removeAttribute('checked');
-            }
-        })
-        incompleteButton.addEventListener("click", () => {
-            incompleteButton.style.backgroundColor = "rgb(47, 181, 93)";
-            incompleteButton.childNodes[1].style.color = "white";
-            incompleteButton.childNodes[0].setAttribute('checked', 'checked');
-
+    // // style edited completed status buttons
+    const toggleCompletedButton = function(todoList, taskIndex) {
+        const completedButton = document.querySelector(".edited-completed-button");
+        if (todoList.list[taskIndex].completed) {
             completedButton.style.backgroundColor = "white";
-            completedButton.childNodes[1].style.color = "rgb(47, 181, 93)";
-            if (completedButton.childNodes[0].hasAttribute('checked')) {
-                completedButton.childNodes[0].removeAttribute('checked');
-            }
-        })
+            completedButton.style.boxShadow = "none";
+            completedButton.childNodes[0].src = uncheckedMarkIcon;
+            completedButton.style.border = "2px solid black";
+
+            todoList.list[taskIndex].setIncomplete();
+        }
+        else {
+            completedButton.style.backgroundColor = "rgb(47, 181, 93)";
+            completedButton.style.boxShadow = null;
+            completedButton.style.border = null;
+            completedButton.childNodes[0].src = checkmarkIcon;
+
+            todoList.list[taskIndex].setCompleted();
+        }
     }
     
     const displayList = function(thisList) {
@@ -505,7 +516,7 @@ const display = (function() {
 
             // show completed status options iff the task is marked completed
             if (thisList.list[taskIndex].completed) {
-                dialog.querySelector(".edited-completed-status-form-container").style.visibility = "visible";
+                dialog.querySelector(".edited-completed-button").style.visibility = "visible";
             }
         
             const overlay = document.querySelector(".modal-overlay");
@@ -573,6 +584,11 @@ const display = (function() {
                 handleEditedTask(thisList, taskIndex, event);
             })
 
+            const editedCompletedButton = document.querySelector(".edited-completed-button");
+            editedCompletedButton.addEventListener("click", function() {
+                toggleCompletedButton(thisList, taskIndex);
+            })
+
             // close dialog button
             const closeDialogButton = document.querySelector(".close-edit-dialog-button");
             closeDialogButton.addEventListener("click", () => {
@@ -583,7 +599,7 @@ const display = (function() {
                 overlay.style.visibility = "hidden";
                 listContainer.style.visibility = "visible";
                 // if visible, reset completed status options to hidden and "completed" as selected
-                if (dialog.querySelector(".edited-completed-status-form-container").style.visibility = "visible") {
+                if (dialog.querySelector(".edited-completed-button").style.visibility = "visible") {
                     hideAndResetCompletedStatusField();
                 }
 
@@ -595,6 +611,20 @@ const display = (function() {
                 newSubmitButton.classList.add("submit-edited-task-form-button");
                 newSubmitButton.textContent = "Save";
                 form.appendChild(newSubmitButton);
+
+                // and for edited completed button
+                const oldEditedCompletedButton = document.querySelector(".edited-completed-button");
+                form.removeChild(oldEditedCompletedButton);
+                const newEditedCompletedButton = document.createElement("button");
+                newEditedCompletedButton.setAttribute('type', 'button');
+                newEditedCompletedButton.classList.add("edited-completed-button");
+                newEditedCompletedButton.style.visibility = "hidden";
+                form.insertBefore(newEditedCompletedButton, form.querySelector(".edited-task-info"));
+                const checkMarkImage = document.createElement("img");
+                checkMarkImage.src = checkmarkIcon;
+                checkMarkImage.setAttribute('alt', 'completed check mark');
+                newEditedCompletedButton.appendChild(checkMarkImage);
+                refreshList(thisList);
             })
         })
         todo.appendChild(editButton);
@@ -678,17 +708,9 @@ const display = (function() {
     }
 
     const hideAndResetCompletedStatusField = function() {
-        document.querySelector(".edited-completed-status-form-container").style.visibility = "hidden";
-        const completedButton = document.querySelector(".styled-edited-completed-button");
-        const incompleteButton = document.querySelector(".styled-edited-incomplete-button");
+        const completedButton = document.querySelector(".edited-completed-button");
+        completedButton.style.visibility = "hidden";
         completedButton.style.backgroundColor = "rgb(47, 181, 93)";
-        completedButton.childNodes[1].style.color = "white";
-        completedButton.childNodes[0].setAttribute('checked', 'checked');
-        incompleteButton.style.backgroundColor = "white";
-        incompleteButton.childNodes[1].style.color = "rgb(47, 181, 93)";
-        if (incompleteButton.childNodes[0].hasAttribute('checked')) {
-            incompleteButton.childNodes[0].removeAttribute('checked');
-        }
     }
 
     // this clear everything in id="content"
@@ -793,12 +815,6 @@ const display = (function() {
         thisList.list[taskIndex].description = editedDescription;
         thisList.list[taskIndex].dueDate = formatDateFromInput(editedDueDate);
         thisList.list[taskIndex].priority = editedPriority;
-        // updated completed status if it was changed to incomplete
-        const incompleteStatusInput = document.getElementById("edited-incomplete-button");
-        if (incompleteStatusInput.hasAttribute('checked')) {
-            thisList.list[taskIndex].completed = false;
-            hideAndResetCompletedStatusField();
-        }
         storageHandler.updateLocalStorage();
 
         // reset form, close modal, and refresh list
@@ -819,6 +835,20 @@ const display = (function() {
         newSubmitEditsButton.classList.add("submit-edited-task-form-button");
         newSubmitEditsButton.textContent = "Save";
         editsForm.appendChild(newSubmitEditsButton);
+
+        // and for edited completed button
+        const oldEditedCompletedButton = document.querySelector(".edited-completed-button");
+        editsForm.removeChild(oldEditedCompletedButton);
+        const newEditedCompletedButton = document.createElement("button");
+        newEditedCompletedButton.setAttribute('type', 'button');
+        newEditedCompletedButton.classList.add("edited-completed-button");
+        newEditedCompletedButton.style.visibility = "hidden";
+        editsForm.insertBefore(newEditedCompletedButton, editsForm.querySelector(".edited-task-info"));
+        const checkMarkImage = document.createElement("img");
+        checkMarkImage.src = checkmarkIcon;
+        checkMarkImage.setAttribute('alt', 'completed check mark');
+        newEditedCompletedButton.appendChild(checkMarkImage);
+        refreshList(thisList);
     }
 
     const displayMyLists = function() {
@@ -1337,6 +1367,7 @@ const display = (function() {
         card.classList.add("color-transition");
         card.style.background = "rgb(47, 181, 93)";
         card.style.color = "white";
+        card.style.borderRadius = "20px 20px 20px 20px";
         const details = card.querySelector(".details");
         details.style.visibility = "hidden";
         const completedButton = card.querySelector(".completed-button");

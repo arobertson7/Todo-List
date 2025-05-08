@@ -53,6 +53,10 @@ const loadWallpaper = function() {
 START SCRIPT
 */
 
+if (!localStorage.getItem('firstVisitCompleted')) {
+    document.getElementById("content").classList.add("first-visit");
+}
+
 export const myLists = [];
 
 display.headerStartup();

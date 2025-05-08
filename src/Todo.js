@@ -26,6 +26,11 @@ class Todo {
         storageHandler.updateLocalStorage();
     }
 
+    setIncomplete() {
+        this.completed = false;
+        storageHandler.updateLocalStorage();
+    }
+
 };
 
 export default Todo;

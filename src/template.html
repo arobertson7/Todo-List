@@ -20,106 +20,6 @@
     </header>
 
     <div id="content">
-        <!-- <div class="list-container">
-            <h2>Today's To-dos</h2>
-            <div class="list-options">
-                <button class="add-task-button">Add New Task</button>
-                 <select name="sort-by" id="sort-by">
-                    <label for="sort-by">Sort by</label>
-                    <option value="sort-by-placeholder" disabled selected>Sort by</option>
-                    <option value="priority-sort">Priority</option>
-                    <option value="due-date-sort">Due Date</option>
-                    <option value="completed-status-sort">Completed Status</option>
-                 </select>
-            </div>
-            <div class="list">
-                <div class="todo">
-                    <div class="todo-header">
-                        <div class="todo-title">
-                            <h3>Play piano</h3>
-                            <button class="edit-button">edit</button>
-                        </div>
-                        <div class="details">
-                            <div class="due-date">
-                                <p style="color: rebeccapurple;">Due in 2 days</p>
-                            </div>
-                            <div class="priority">
-                                <p style="color: rgb(43, 164, 92);">Low Priority</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p>today we need to practice piano for 4 hours</p>
-
-                    <button class="completed-button">mark complete</button>
-                </div>
-                <div class="todo">
-                    <div class="todo-header">
-                        <div class="todo-title">
-                            <h3>Play piano</h3>
-                            <button class="edit-button">edit</button>
-                        </div>
-                        <div class="details">
-                            <div class="due-date">
-                                <p style="color: rebeccapurple;">Due in 2 days</p>
-                            </div>
-                            <div class="priority">
-                                <p style="color: rgb(43, 164, 92);">Low Priority</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p>today we need to practice piano for 4 hours</p>
-
-                    <button class="completed-button">mark complete</button>
-                </div>
-                <div class="todo">
-                    <div class="todo-header">
-                        <div class="todo-title">
-                            <h3>Play piano</h3>
-                            <button class="edit-button">edit</button>
-                        </div>
-                        <div class="details">
-                            <div class="due-date">
-                                <p style="color: rebeccapurple;">Due in 2 days</p>
-                            </div>
-                            <div class="priority">
-                                <p style="color: rgb(43, 164, 92);">Low Priority</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p>today we need to practice piano for 4 hours</p>
-
-                    <button class="completed-button">mark complete</button>
-                </div>
-            
-            </div>
-        </div> -->
-
-
-        <!-- <div class="my-lists-container">
-            <h2>My Lists</h2>
-            <div class="my-lists">
-                <div class="list-card">
-                    <h3 class="list-card-title">Today's To-dos</h3>
-                    <p class="list-progress">5 / 7 tasks completed</p>
-                </div>
-                <div class="list-card">
-                    <h3 class="list-card-title">Tomorrow's To-dos</h3>
-                    <p class="list-progress">1 / 3 tasks completed</p>
-                </div>
-                <div class="list-card">
-                    <h3 class="list-card-title">Übermorgen's To-dos</h3>
-                    <p class="list-progress">0 / 1 tasks completed</p>
-                </div>
-                <div class="list-card">
-                    <h3 class="list-card-title">Übermorgen's To-dos</h3>
-                    <p class="list-progress">0 / 1 tasks completed</p>
-                </div>
-                <div class="list-card">
-                    <h3 class="list-card-title">Übermorgen's To-dos</h3>
-                    <p class="list-progress">0 / 1 tasks completed</p>
-                </div>
-            </div>
-        </div> -->
 
     </div>
 
@@ -167,6 +67,7 @@
         <form action="" class="edit-task-form">
             <h2>Edit Task</h2>
             <button type="button" class="close-edit-dialog-button">x</button>
+            <button type="button" class="edited-completed-button" style="visibility: hidden;"><img src="./checkmark.svg" alt="completed check mark"></button>
             <div class="edited-task-info">
                 <div class="edited-title-form-container">
                     <label for="edited-task-title">Title:</label>
@@ -193,19 +94,6 @@
                             </div>
                             <div>
                                 <button type="button" class="styled-edited-priority-button low color-transition"><input type="radio" id="edited-low-priority" name="edited-priority" value="3"><label for="edited-low-priority">Low</label></button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="edited-completed-status-form-container" style="visibility: hidden;">
-                    <fieldset>
-                        <legend>Status:</legend>
-                        <div class="edited-completed-status-buttons">
-                            <div>
-                                <button type="button" class="styled-edited-completed-button color-transition"><input type="radio" id="edited-completed-button" name="edited-completed-status" value="true" required checked><label for="edited-completed-button">Completed</label></button>
-                            </div>
-                            <div>
-                                <button type="button" class="styled-edited-incomplete-button color-transition"><input type="radio" id="edited-incomplete-button" name="edited-completed-status" value="false"><label for="edited-incomplete-button">Incomplete</label></button>
                             </div>
                         </div>
                     </fieldset>
