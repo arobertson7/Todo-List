@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1">
     <title>Todo List</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -131,10 +131,10 @@
             <div class="task-info">
                 <div class="new-title-form-container">
                     <label for="new-task-title">Title:</label>
-                    <input type="text" id="new-task-title" name="title" required>
+                    <input type="text" id="new-task-title" name="title" required maxlength="20">
                 </div>
                 <div class="new-description-form-container">
-                    <label for="new-task-description">Description:</label>
+                    <label for="new-task-description">Notes:</label>
                     <input type="text" id="new-task-description" name="description">
                 </div>
                 <div class="new-due-date-form-container">
@@ -170,10 +170,10 @@
             <div class="edited-task-info">
                 <div class="edited-title-form-container">
                     <label for="edited-task-title">Title:</label>
-                    <input type="text" id="edited-task-title" name="edited-title" required>
+                    <input type="text" id="edited-task-title" name="edited-title" required maxlength="20">
                 </div>
                 <div class="edited-description-form-container">
-                    <label for="edited-task-description">Description:</label>
+                    <label for="edited-task-description">Notes:</label>
                     <input type="text" id="edited-task-description" name="edited-description">
                 </div>
                 <div class="edited-due-date-form-container">
@@ -221,7 +221,7 @@
             <button type="button" class="close-new-list-dialog-button">x</button>
             <div class="new-list-info">
                 <label for="new-list-title">Add a title:</label>
-                <input type="text" id="new-list-title" name="new-list-title" required>
+                <input type="text" id="new-list-title" name="new-list-title" required maxlength="25">
             </div>
             <button class="submit-new-list-button">Create New List</button>
         </form>

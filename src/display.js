@@ -9,6 +9,7 @@ import tuneIcon from "./tune.svg";
 import downArrowIcon from "./down-arrow-icon.svg";
 import upArrowIcon from "./up-arrow-icon.svg";
 import editIcon from "./edit-icon.svg";
+import checkmarkIcon from "./checkmark.svg";
 import storageHandler from "./storage.js";
 
 export let listColorMap = [];
@@ -485,6 +486,15 @@ const display = (function() {
         todo.classList.add("todo");
         // todo.classList.add(`index${taskIndex}`);
 
+        const taskNumber = document.createElement("div");
+        taskNumber.classList.add('card-task-number');
+        taskNumber.appendChild(document.createElement('p'));
+        // taskNumber.childNodes[0].textContent = `${taskIndex + 1}/${thisList.size()}`;
+        taskNumber.childNodes[0].textContent = taskIndex + 1;
+        taskNumber.style.backgroundColor = getListColor(thisList.title);
+        // taskNumber.style.backgroundColor = "rgba(0, 0, 0, 0.66)";
+        todo.appendChild(taskNumber);
+
         const editButton = document.createElement("button");
         editButton.classList.add("edit-button");
         editButton.textContent = "edit";
@@ -593,12 +603,10 @@ const display = (function() {
         todoHeader.classList.add("todo-header");
         todo.appendChild(todoHeader);
     
-        const todoTitle = document.createElement("div");
+        const todoTitle = document.createElement("h3");
         todoTitle.classList.add("todo-title");
+        todoTitle.textContent = thisTodo.title;
         todoHeader.appendChild(todoTitle);
-        const title = document.createElement("h3");
-        title.textContent = thisTodo.title;
-        todoTitle.appendChild(title);
     
         const details = document.createElement("div");
         details.classList.add("details");
@@ -636,10 +644,22 @@ const display = (function() {
         dueDate.appendChild(dueDateNote);
         details.appendChild(dueDate);
     
-        const description = document.createElement("p");
-        description.classList.add("todo-description");
-        description.textContent = thisTodo.description;
-        todo.appendChild(description);
+        const notesContainer = document.createElement("div");
+        notesContainer.classList.add("notes-container");
+        const notesLabel = document.createElement("label");
+        notesLabel.textContent = "Notes:";
+        notesLabel.setAttribute('for', `todo${taskIndex}-notes`);
+        notesContainer.appendChild(notesLabel);
+        const notesTextArea = document.createElement("textarea");
+        notesTextArea.addEventListener("focusout", () => {
+            const notes = notesTextArea.value;
+            thisList.list[taskIndex].setDescription(notes);
+        })
+        notesTextArea.id = `todo${taskIndex}-notes`;
+        notesTextArea.setAttribute('name', 'notes');
+        notesContainer.appendChild(notesTextArea);
+        notesTextArea.value = thisTodo.description;
+        todo.appendChild(notesContainer);
     
         const completedButton = document.createElement("button");
         completedButton.classList.add("completed-button");
@@ -1110,6 +1130,7 @@ const display = (function() {
         const originalTitle = titleHeader.textContent;
 
         const editTitleInput = document.createElement("input");
+        editTitleInput.setAttribute("maxlength", "25");
         editTitleInput.setAttribute("type", "text");
         editTitleInput.id = "edit-title-input";
         editTitleInput.setAttribute("name", "edited-title-input");
@@ -1321,18 +1342,20 @@ const display = (function() {
         const completedButton = card.querySelector(".completed-button");
         card.removeChild(completedButton);
         const completedMessage = document.createElement("p");
-        completedMessage.style.gridColumn = "2";
-        completedMessage.style.gridRow = "3";
+        completedMessage.classList.add("completed-message");
+      
         completedMessage.textContent = "Completed";
         completedMessage.style.border = "1px solid white";
         completedMessage.style.padding = "2px 10px";
-        completedMessage.style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
+        completedMessage.style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.29)";
         card.appendChild(completedMessage);
-        card.querySelector(".todo-header").style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
-        card.querySelector(".todo-description").style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.68)";
-        const completedCheckMark = document.createElement("h6");
+        card.querySelector(".todo-header").style.textShadow = "1px 1px 1px rgba(0, 0, 0, 0.29)";
+        card.querySelector(".notes-container").style.visibility = "hidden";
+        card.querySelector(".card-task-number").style.visibility = "hidden";
+
+        const completedCheckMark = document.createElement("img");
         completedCheckMark.classList.add("completed-check-mark");
-        completedCheckMark.textContent = "✓";
+        completedCheckMark.src = checkmarkIcon;
         card.insertBefore(completedCheckMark, card.querySelector(".edit-button"));
     }
 

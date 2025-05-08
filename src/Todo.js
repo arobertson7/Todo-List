@@ -16,6 +16,11 @@ class Todo {
         this.completed = false;
     }
 
+    setDescription(description) {
+        this.description = description;
+        storageHandler.updateLocalStorage();
+    }
+
     setCompleted() {
         this.completed = true;
         storageHandler.updateLocalStorage();
