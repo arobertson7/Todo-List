@@ -513,7 +513,7 @@ nav button {
     background-color: rgb(47, 181, 93);
     /* border: 1.2px solid rgb(47, 181, 93); */
     border: 1.2px solid black;
-    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.417);
+    box-shadow: 1.5px 1.5px 1px 1px rgba(0, 0, 0, 0.35);
 }
 
 .submit-new-task-form-button, .submit-edited-task-form-button, .submit-new-list-button, .submit-edit-list-button {
